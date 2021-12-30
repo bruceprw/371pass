@@ -139,6 +139,16 @@
 //  ...
 //  wObj.save("database.json");
 
+// TODO Write an == operator overload for the Wallet class, such that two
+//  Wallet objects are equal only if they have the exact same data.
+//
+// Example:
+//  Wallet wObj1{};
+//  Wallet wObj2{};
+//  if(wObj1 == wObj2) {
+//    ...
+//  }
+
 // TODO Write a function, str, that takes no parameters and returns a
 //  std::string of the JSON representation of the data in the Wallet.
 //

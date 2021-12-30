@@ -23,7 +23,7 @@
 
 #include "../src/wallet.h"
 
-SCENARIO("an empty Wallet can be constructed successfully", "[wallet]") {
+SCENARIO("An empty Wallet can be constructed successfully", "[wallet]") {
 
   GIVEN("nothing") {
 

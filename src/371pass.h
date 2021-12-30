@@ -8,8 +8,11 @@
 // Canvas: https://canvas.swansea.ac.uk/courses/15581
 // -----------------------------------------------------
 // This file contains declarations for the helper
-// functions used for initialising and running 371pass
+// functions used for initialising and running 371pass.
 // -----------------------------------------------------
+
+#ifndef _371PASS_H
+#define _371PASS_H
 
 #include <string>
 
@@ -31,7 +34,7 @@ const std::string STUDENT_NUMBER = "987654";
 // As such, it is a useful way for us to specify information in both a
 // machine and human-readable format.
 //
-// Unlike Java, enums in C++ only map to intenger values. You can either let
+// Unlike Java, enums in C++ only map to integer values. You can either let
 // the compiler generate the values automatically, in which it allocates a
 // unique integer (0-indexed). Or, you can set the value by giving the name
 // followed by = <value> (e.g. CREATE=0).
@@ -53,3 +56,5 @@ std::string getJSON(Wallet &wObj, const std::string &c, const std::string &i,
                     const std::string &e);
 
 }; // namespace App
+
+#endif // _371PASS_H
