@@ -31,12 +31,12 @@ SCENARIO("An empty Category can be constructed successfully", "[category]") {
 
     WHEN("a new Category object is constructed") {
 
-      Category c{ident};
+      Category cObj1{ident};
 
       THEN("it will contain zero Items/be empty") {
 
-        REQUIRE(c.size() == 0);
-        REQUIRE(c.empty());
+        REQUIRE(cObj1.size() == 0);
+        REQUIRE(cObj1.empty());
 
       } // THEN
 
@@ -52,28 +52,28 @@ SCENARIO("Items can be added to and retrieved from a Category", "[category]") {
 
   GIVEN("a Category object with identifier '" + ident + "'") {
 
-    Category c{ident};
+    Category cObj1{ident};
 
     AND_GIVEN("an Item with identifier '" + ident + "'") {
 
-      Item i{ident};
+      Item iObj1{ident};
 
       WHEN("adding the Item") {
 
         THEN("true is returned") {
 
-          REQUIRE(c.addItem(i) == true);
+          REQUIRE(cObj1.addItem(iObj1) == true);
 
           AND_THEN("the Category contains 1 Item") {
 
-            REQUIRE(c.size() == 1);
-            REQUIRE_FALSE(c.empty());
+            REQUIRE(cObj1.size() == 1);
+            REQUIRE_FALSE(cObj1.empty());
 
             AND_THEN("getting the Item using the ident '" + ident +
                      "' will return the expected object") {
 
-              REQUIRE(c.getItem(ident) == i);
-              REQUIRE_FALSE(c.empty());
+              REQUIRE(cObj1.getItem(ident) == iObj1);
+              REQUIRE_FALSE(cObj1.empty());
 
             } // AND_THEN
 
@@ -81,16 +81,16 @@ SCENARIO("Items can be added to and retrieved from a Category", "[category]") {
 
           AND_GIVEN("another Item with the same ident, '" + ident + "'") {
 
-            Item i2{ident};
+            Item iObj2{ident};
 
             WHEN("adding the Item") {
 
               THEN("false is returned and the size of the Category will not "
                    "change") {
 
-                REQUIRE(c.addItem(i2) == false);
-                REQUIRE(c.size() == 1);
-                REQUIRE_FALSE(c.empty());
+                REQUIRE(cObj1.addItem(iObj2) == false);
+                REQUIRE(cObj1.size() == 1);
+                REQUIRE_FALSE(cObj1.empty());
 
               } // THEN
 
@@ -103,20 +103,20 @@ SCENARIO("Items can be added to and retrieved from a Category", "[category]") {
           AND_GIVEN("another Item with the a different ident, '" + ident3 +
                     "'") {
 
-            Item i3{ident3};
+            Item iObj3{ident3};
 
             WHEN("adding the Item") {
 
               THEN("true is returned and the size of the Category will be 2") {
 
-                REQUIRE(c.addItem(i3) == true);
-                REQUIRE(c.size() == 2);
-                REQUIRE_FALSE(c.empty());
+                REQUIRE(cObj1.addItem(iObj3) == true);
+                REQUIRE(cObj1.size() == 2);
+                REQUIRE_FALSE(cObj1.empty());
 
                 AND_THEN("getting the Item using the ident '" + ident3 +
                          "' will return the expected object") {
 
-                  REQUIRE(c.getItem(ident3) == i3);
+                  REQUIRE(cObj1.getItem(ident3) == iObj3);
 
                 } // AND_THEN
 
@@ -142,28 +142,28 @@ SCENARIO("Items can be added to and deleted from a Category", "[category]") {
 
   GIVEN("a Category object with identifier '" + ident + "'") {
 
-    Category c{ident};
+    Category cObj1{ident};
 
     AND_GIVEN("an Item with identifier '" + ident + "") {
 
-      Item i{ident};
+      Item iObj1{ident};
 
       WHEN("the entry is added") {
 
         THEN("true is returned") {
 
-          REQUIRE(c.addItem(i) == true);
+          REQUIRE(cObj1.addItem(iObj1) == true);
 
           AND_THEN("the Category contains 1 Item") {
 
-            REQUIRE(c.size() == 1);
-            REQUIRE_FALSE(c.empty());
+            REQUIRE(cObj1.size() == 1);
+            REQUIRE_FALSE(cObj1.empty());
 
             WHEN("getting the Item using the ident '" + ident + "'") {
 
               THEN("the Item object is returned") {
 
-                REQUIRE(c.getItem(ident) == i);
+                REQUIRE(cObj1.getItem(ident) == iObj1);
 
               } // THEN
 
@@ -174,9 +174,9 @@ SCENARIO("Items can be added to and deleted from a Category", "[category]") {
               THEN("an std::out_of_range exception is thrown and the Category "
                    "will not change") {
 
-                REQUIRE_THROWS_AS(c.deleteItem("blah"), std::out_of_range);
-                REQUIRE(c.getItem(ident) == i);
-                REQUIRE(c.size() == 1);
+                REQUIRE_THROWS_AS(cObj1.deleteItem("blah"), std::out_of_range);
+                REQUIRE(cObj1.getItem(ident) == iObj1);
+                REQUIRE(cObj1.size() == 1);
 
               } // THEN
 
@@ -186,9 +186,9 @@ SCENARIO("Items can be added to and deleted from a Category", "[category]") {
 
               THEN("true is returned and the Category will be empty") {
 
-                REQUIRE(c.deleteItem(ident) == true);
-                REQUIRE_THROWS_AS(c.getItem(ident), std::out_of_range);
-                REQUIRE(c.size() == 0);
+                REQUIRE(cObj1.deleteItem(ident) == true);
+                REQUIRE_THROWS_AS(cObj1.getItem(ident), std::out_of_range);
+                REQUIRE(cObj1.size() == 0);
 
               } // THEN
 

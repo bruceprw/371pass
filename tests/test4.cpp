@@ -1,5 +1,5 @@
 // -----------------------------------------------------
-// CSC371 Advanced Object Oriented Programming (2021/22)
+// CScObj371 Advanced Object Oriented Programming (2021/22)
 // Department of Computer Science, Swansea University
 //
 // Author: Martin Porcheron
@@ -49,29 +49,29 @@ SCENARIO("Category objects can be added to and retrieved from a Wallet",
 
   GIVEN("a Wallet object") {
 
-    Wallet w{};
+    Wallet wObj1{};
 
     const std::string ident = "Test";
 
     AND_GIVEN("a Category with identifier '" + ident + "'") {
 
-      Category c{ident};
+      Category cObj1{ident};
 
       WHEN("adding the Category") {
 
         THEN("true is returned") {
 
-          REQUIRE(w.addCategory(c) == true);
+          REQUIRE(wObj1.addCategory(cObj1) == true);
 
           AND_THEN("the Wallet contains 1 Category") {
 
-            REQUIRE(w.size() == 1);
-            REQUIRE_FALSE(w.empty());
+            REQUIRE(wObj1.size() == 1);
+            REQUIRE_FALSE(wObj1.empty());
 
             AND_THEN("getting the Category using the ident '" + ident +
                      "' will return the expected object") {
 
-              REQUIRE(w.getCategory(ident) == c);
+              REQUIRE(wObj1.getCategory(ident) == cObj1);
 
             } // AND_THEN
 
@@ -80,16 +80,16 @@ SCENARIO("Category objects can be added to and retrieved from a Wallet",
           AND_GIVEN("adding a second empty Category with the same ident, '" +
                     ident) {
 
-            Category c2{ident};
+            Category cObj2{ident};
 
             WHEN("adding the Category") {
 
               THEN("false is returned and the size of the Wallet will not "
                    "change") {
 
-                REQUIRE_FALSE(w.addCategory(c2));
-                REQUIRE(w.size() == 1);
-                REQUIRE_FALSE(w.empty());
+                REQUIRE_FALSE(wObj1.addCategory(cObj2));
+                REQUIRE(wObj1.size() == 1);
+                REQUIRE_FALSE(wObj1.empty());
 
               } // THEN
 
@@ -98,7 +98,7 @@ SCENARIO("Category objects can be added to and retrieved from a Wallet",
           } // AND_GIVEN
 
           const std::string ident3 = "Test2";
-          Category c3{ident3};
+          Category cObj3{ident3};
 
           AND_GIVEN("another Category with a different ident, '" + ident3) {
 
@@ -106,14 +106,14 @@ SCENARIO("Category objects can be added to and retrieved from a Wallet",
 
               THEN("true is returned and the size of the Wallet will be 2") {
 
-                REQUIRE(w.addCategory(c3) == true);
-                REQUIRE(w.size() == 2);
-                REQUIRE_FALSE(w.empty());
+                REQUIRE(wObj1.addCategory(cObj3) == true);
+                REQUIRE(wObj1.size() == 2);
+                REQUIRE_FALSE(wObj1.empty());
 
                 AND_THEN("getting the Category using the ident '" + ident3 +
                          "' will return the expected object") {
 
-                  REQUIRE(w.getCategory(ident3) == c3);
+                  REQUIRE(wObj1.getCategory(ident3) == cObj3);
 
                 } // AND_THEN
 

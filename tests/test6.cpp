@@ -57,8 +57,8 @@ SCENARIO("A Wallet object can save to a JSON file", "[wallet]") {
 
     WHEN("a new empty Wallet object is constructed") {
 
-      Wallet w{};
-      REQUIRE(w.empty());
+      Wallet wObj1{};
+      REQUIRE(wObj1.empty());
 
       const std::string ident1 = "ident1";
       const std::string ident2 = "ident2";
@@ -91,14 +91,14 @@ SCENARIO("A Wallet object can save to a JSON file", "[wallet]") {
         REQUIRE(cObj1.size() == 2);
         REQUIRE(cObj2.size() == 1);
 
-        w.addCategory(cObj1);
-        w.addCategory(cObj2);
+        wObj1.addCategory(cObj1);
+        wObj1.addCategory(cObj2);
 
-        REQUIRE(w.size() == 2);
+        REQUIRE(wObj1.size() == 2);
 
         THEN("the saving to file will not throw an exception") {
 
-          REQUIRE_NOTHROW(w.save(filePath));
+          REQUIRE_NOTHROW(wObj1.save(filePath));
 
           AND_THEN("the file contents will be correct") {
 

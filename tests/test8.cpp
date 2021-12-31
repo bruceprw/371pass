@@ -84,25 +84,24 @@ SCENARIO(
 
           REQUIRE_NOTHROW(App::run(argc, argv));
 
-          AND_WHEN(
-              "loading the saved file into a new Wallet object") {
+          AND_WHEN("loading the saved file into a new Wallet object") {
 
-            Wallet w{};
-            REQUIRE(w.empty());
-            REQUIRE_NOTHROW(w.load(filePath));
+            Wallet wObj1{};
+            REQUIRE(wObj1.empty());
+            REQUIRE_NOTHROW(wObj1.load(filePath));
 
             THEN("the new Wallet will contain the Category object") {
 
-              REQUIRE_NOTHROW(w.getCategory(testCategory));
-              REQUIRE(w.getCategory(testCategory).size() == 0);
+              REQUIRE_NOTHROW(wObj1.getCategory(testCategory));
+              REQUIRE(wObj1.getCategory(testCategory).size() == 0);
 
             } // THEN
 
             AND_WHEN("and the item program argument is '" + testItem + "'") {
 
               Argv argvObj({"test", "--db", filePath.c_str(), "--action",
-                            "create", "--category", testCategory.c_str(), "--item",
-                            testItem.c_str()});
+                            "create", "--category", testCategory.c_str(),
+                            "--item", testItem.c_str()});
               auto **argv = argvObj.argv();
               auto argc = argvObj.argc();
 
@@ -112,18 +111,20 @@ SCENARIO(
 
                 AND_WHEN("loading the saved file into a new Wallet object") {
 
-                  Wallet w{};
-                  REQUIRE(w.empty());
-                  REQUIRE_NOTHROW(w.load(filePath));
+                  Wallet wObj1{};
+                  REQUIRE(wObj1.empty());
+                  REQUIRE_NOTHROW(wObj1.load(filePath));
 
                   THEN("the new Wallet will contain the Category and Item "
-                           "objects") {
+                       "objects") {
 
-                    REQUIRE_NOTHROW(w.getCategory(testCategory));
-                    REQUIRE(w.getCategory(testCategory).size() == 1);
-                    REQUIRE_NOTHROW(w.getCategory(testCategory).getItem(testItem));
-                    REQUIRE(w.getCategory(testCategory).getItem(testItem).size() ==
-                            0);
+                    REQUIRE_NOTHROW(wObj1.getCategory(testCategory));
+                    REQUIRE(wObj1.getCategory(testCategory).size() == 1);
+                    REQUIRE_NOTHROW(
+                        wObj1.getCategory(testCategory).getItem(testItem));
+                    REQUIRE(wObj1.getCategory(testCategory)
+                                .getItem(testItem)
+                                .size() == 0);
 
                   } // THEN
 
@@ -153,21 +154,21 @@ SCENARIO(
                       AND_WHEN("loading the saved file into a new Wallet "
                                "object") {
 
-                        Wallet w{};
-                        REQUIRE(w.empty());
-                        REQUIRE_NOTHROW(w.load(filePath));
+                        Wallet wObj1{};
+                        REQUIRE(wObj1.empty());
+                        REQUIRE_NOTHROW(wObj1.load(filePath));
 
                         THEN("the new Wallet will contain the Category and "
-                                 "Item objects and entry") {
+                             "Item objects and entry") {
 
-                          REQUIRE_NOTHROW(w.getCategory(testCategory));
-                          REQUIRE(w.getCategory(testCategory).size() == 1);
-                          REQUIRE_NOTHROW(
-                              w.getCategory(testCategory).getItem(testItem));
-                          REQUIRE(w.getCategory(testCategory)
+                          REQUIRE_NOTHROW(wObj1.getCategory(testCategory));
+                          REQUIRE(wObj1.getCategory(testCategory).size() == 1);
+                          REQUIRE_NOTHROW(wObj1.getCategory(testCategory)
+                                              .getItem(testItem));
+                          REQUIRE(wObj1.getCategory(testCategory)
                                       .getItem(testItem)
                                       .size() == 1);
-                          REQUIRE(w.getCategory(testCategory)
+                          REQUIRE(wObj1.getCategory(testCategory)
                                       .getItem(testItem)
                                       .getEntry(testEntryKey) ==
                                   testEntryValue);

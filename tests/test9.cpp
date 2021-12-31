@@ -89,13 +89,13 @@ SCENARIO("The database and action program arguments can be parsed correctly "
           AND_WHEN(
               "loading the saved file into a new Wallet object will work") {
 
-            Wallet w{};
-            REQUIRE(w.empty());
-            REQUIRE_NOTHROW(w.load(filePath));
+            Wallet wObj1{};
+            REQUIRE(wObj1.empty());
+            REQUIRE_NOTHROW(wObj1.load(filePath));
 
             THEN("the new Wallet will not contain the entry") {
 
-              REQUIRE_THROWS_AS(w.getCategory(testCategory)
+              REQUIRE_THROWS_AS(wObj1.getCategory(testCategory)
                                     .getItem(testItem)
                                     .getEntry(testEntryKey),
                                 std::out_of_range);
@@ -125,14 +125,15 @@ SCENARIO("The database and action program arguments can be parsed correctly "
           AND_WHEN(
               "loading the saved file into a new Wallet object will work") {
 
-            Wallet w{};
-            REQUIRE(w.empty());
-            REQUIRE_NOTHROW(w.load(filePath));
+            Wallet wObj1{};
+            REQUIRE(wObj1.empty());
+            REQUIRE_NOTHROW(wObj1.load(filePath));
 
             THEN("the new Wallet will not contain the item") {
 
-              REQUIRE_THROWS_AS(w.getCategory(testCategory).getItem(testItem),
-                                std::out_of_range);
+              REQUIRE_THROWS_AS(
+                  wObj1.getCategory(testCategory).getItem(testItem),
+                  std::out_of_range);
 
             } // THEN
 
@@ -157,13 +158,14 @@ SCENARIO("The database and action program arguments can be parsed correctly "
           AND_WHEN(
               "loading the saved file into a new Wallet object will work") {
 
-            Wallet w{};
-            REQUIRE(w.empty());
-            REQUIRE_NOTHROW(w.load(filePath));
+            Wallet wObj1{};
+            REQUIRE(wObj1.empty());
+            REQUIRE_NOTHROW(wObj1.load(filePath));
 
             THEN("the new Wallet will not contain the category") {
 
-              REQUIRE_THROWS_AS(w.getCategory(testCategory), std::out_of_range);
+              REQUIRE_THROWS_AS(wObj1.getCategory(testCategory),
+                                std::out_of_range);
 
             } // THEN
 

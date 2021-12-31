@@ -31,12 +31,12 @@ SCENARIO("An empty Item can be constructed successfully", "[item]") {
 
     WHEN("a new Item object is constructed") {
 
-      Item i{ident};
+      Item iObj1{ident};
 
       THEN("it will contain zero entries/be empty") {
 
-        REQUIRE(i.size() == 0);
-        REQUIRE(i.empty());
+        REQUIRE(iObj1.size() == 0);
+        REQUIRE(iObj1.empty());
 
       } // THEN
 
@@ -52,7 +52,7 @@ SCENARIO("Entries can be added to and retrieved from an Item", "[item]") {
 
   GIVEN("an Item object with identifier '" + ident + "'") {
 
-    Item i{ident};
+    Item iObj1{ident};
 
     std::string key = "url";
     std::string value = "https://www.google.com/";
@@ -63,17 +63,17 @@ SCENARIO("Entries can be added to and retrieved from an Item", "[item]") {
 
         THEN("true is returned") {
 
-          REQUIRE(i.addEntry(key, value) == true);
+          REQUIRE(iObj1.addEntry(key, value) == true);
 
           AND_THEN("the Item contains 1 entry") {
 
-            REQUIRE(i.size() == 1);
-            REQUIRE_FALSE(i.empty());
+            REQUIRE(iObj1.size() == 1);
+            REQUIRE_FALSE(iObj1.empty());
 
             AND_THEN("getting the entry using the key '" + key +
                      "' will return the expected value") {
 
-              REQUIRE(i.getEntry(key) == value);
+              REQUIRE(iObj1.getEntry(key) == value);
 
             } // AND_THEN
 
@@ -86,9 +86,9 @@ SCENARIO("Entries can be added to and retrieved from an Item", "[item]") {
               THEN("false is returned and the size of the Item will not "
                    "change") {
 
-                REQUIRE_FALSE(i.addEntry(key, value));
-                REQUIRE(i.size() == 1);
-                REQUIRE_FALSE(i.empty());
+                REQUIRE_FALSE(iObj1.addEntry(key, value));
+                REQUIRE(iObj1.size() == 1);
+                REQUIRE_FALSE(iObj1.empty());
 
               } // THEN
 
@@ -106,14 +106,14 @@ SCENARIO("Entries can be added to and retrieved from an Item", "[item]") {
 
               THEN("true is returned and the size of the Item will be 2") {
 
-                REQUIRE(i.addEntry(key, value) == true);
-                REQUIRE(i.size() == 2);
-                REQUIRE_FALSE(i.empty());
+                REQUIRE(iObj1.addEntry(key, value) == true);
+                REQUIRE(iObj1.size() == 2);
+                REQUIRE_FALSE(iObj1.empty());
 
                 AND_THEN("getting the entry using the key '" + key +
                          "' will return the expected value") {
 
-                  REQUIRE(i.getEntry(key) == value);
+                  REQUIRE(iObj1.getEntry(key) == value);
 
                 } // AND_THEN
 
@@ -139,7 +139,7 @@ SCENARIO("Entries can be added to and deleted from an Item", "[item]") {
 
   GIVEN("an Item object with identifier '" + ident + "'") {
 
-    Item i{ident};
+    Item iObj1{ident};
 
     std::string key = "url";
     std::string value = "https://www.google.com/";
@@ -150,18 +150,18 @@ SCENARIO("Entries can be added to and deleted from an Item", "[item]") {
 
         THEN("true is returned") {
 
-          REQUIRE(i.addEntry(key, value) == true);
+          REQUIRE(iObj1.addEntry(key, value) == true);
 
           AND_THEN("the Item contains 1 entry") {
 
-            REQUIRE(i.size() == 1);
-            REQUIRE_FALSE(i.empty());
+            REQUIRE(iObj1.size() == 1);
+            REQUIRE_FALSE(iObj1.empty());
 
             WHEN("getting the entry using the key '" + key + "'") {
 
               THEN("the expected value will be returned") {
 
-                REQUIRE(i.getEntry(key) == value);
+                REQUIRE(iObj1.getEntry(key) == value);
 
               } // THEN
 
@@ -171,9 +171,9 @@ SCENARIO("Entries can be added to and deleted from an Item", "[item]") {
 
               THEN("the Item will not change") {
 
-                REQUIRE_FALSE(i.deleteEntry("blah"));
-                REQUIRE(i.getEntry(key) == value);
-                REQUIRE(i.size() == 1);
+                REQUIRE_FALSE(iObj1.deleteEntry("blah"));
+                REQUIRE(iObj1.getEntry(key) == value);
+                REQUIRE(iObj1.size() == 1);
 
               } // THEN
 
@@ -183,9 +183,9 @@ SCENARIO("Entries can be added to and deleted from an Item", "[item]") {
 
               THEN("the Item will be empty") {
 
-                REQUIRE(i.deleteEntry(key));
-                REQUIRE_THROWS_AS(i.getEntry(key), std::out_of_range);
-                REQUIRE(i.size() == 0);
+                REQUIRE(iObj1.deleteEntry(key));
+                REQUIRE_THROWS_AS(iObj1.getEntry(key), std::out_of_range);
+                REQUIRE(iObj1.size() == 0);
 
               } // THEN
 
