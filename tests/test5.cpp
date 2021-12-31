@@ -10,409 +10,122 @@
 // Catch2 — https://github.com/catchorg/Catch2
 // Catch2 is licensed under the BOOST license
 // -----------------------------------------------------
-// This file contains tests the equals operator overload
-// for the Item, Category and Wallet objects.
+// This file contains tests loading JSON files into
+// the Wallet.
 // -----------------------------------------------------
 
 #include "../src/lib_catch.hpp"
 
+#include <fstream>
 #include <string>
 
 #include "../src/lib_cxxopts.hpp"
+#include "../src/lib_cxxopts_argv.hpp"
 
-#include "../src/item.h"
-#include "../src/category.h"
 #include "../src/wallet.h"
 
-SCENARIO("The == operator on Item evaluates its contents correctly", "[item]") {
+SCENARIO("A Wallet object can load from a JSON file", "[wallet]") {
 
-  const std::string ident1 = "ident1";
-  const std::string ident2 = "ident2";
+  const std::string filePath = "./tests/testdatabase.json";
 
-  const std::string key1 = "key1";
-  const std::string key2 = "key2";
+  auto fileExists = [](const std::string &path) {
+    return std::ifstream(path).is_open();
+  };
 
-  const std::string value1 = "value1";
-  const std::string value2 = "value2";
+  auto writeFileContents = [](const std::string &path,
+                              const std::string &contents) {
+    // Not a robust way to do this, but here it doesn't matter so much, if it
+    // goes wrong we'll fail the test anyway…
+    std::ofstream f{path};
+    f << contents;
+  };
 
-  GIVEN("an empty Item object with the identifier '" + ident1 + "'") {
+  GIVEN("a valid path to a reset database JSON file") {
 
-    Item iObj1{ident1};
+    // Reset the file...
+    REQUIRE(fileExists(filePath));
+    REQUIRE_NOTHROW(writeFileContents(
+        filePath, "{\"Bank Accounts\":{\"Starling\":{\"Account "
+                  "Number\":\"12345678\",\"Name\":\"Mr John Doe\",\"Sort "
+                  "Code\":\"12-34-56\"}},\"Websites\":{\"Facebook\":{"
+                  "\"password\":\"pass1234fb\",\"url\":\"https://"
+                  "www.facebook.com/"
+                  "\",\"username\":\"example@gmail.com\"},\"Google\":{"
+                  "\"password\":\"pass1234\",\"url\":\"https://www.google.com/"
+                  "\",\"username\":\"example@gmail.com\"},\"Twitter\":{"
+                  "\"password\":\"r43rfsffdsfdsf\",\"url\":\"https://"
+                  "www.twitter.com/\",\"username\":\"example@gmail.com\"}}}"));
 
-    REQUIRE(iObj1.empty());
+    WHEN("a new empty Wallet object is constructed") {
 
-    WHEN("compared against itself") {
+      Wallet w{};
+      REQUIRE(w.empty());
 
-      THEN("the result will be true") {
+      AND_WHEN("the load function is called with the file path") {
 
-        REQUIRE(iObj1 == iObj1);
+        THEN("the file will be imported without an exception") {
 
-      } // THEN
+          REQUIRE_NOTHROW(w.load(filePath));
+          REQUIRE(w.size() == 2);
+
+          REQUIRE_NOTHROW(w.getCategory("Websites"));
+          REQUIRE(w.getCategory("Websites").size() == 3);
+
+          REQUIRE_NOTHROW(w.getCategory("Websites").getItem("Google"));
+          REQUIRE(w.getCategory("Websites").getItem("Google").size() == 3);
+          REQUIRE(w.getCategory("Websites").getItem("Google").getEntry("url") ==
+                  "https://www.google.com/");
+          REQUIRE(w.getCategory("Websites")
+                      .getItem("Google")
+                      .getEntry("username") == "example@gmail.com");
+          REQUIRE(w.getCategory("Websites")
+                      .getItem("Google")
+                      .getEntry("password") == "pass1234");
+
+          REQUIRE_NOTHROW(w.getCategory("Websites").getItem("Facebook"));
+          REQUIRE(w.getCategory("Websites").getItem("Facebook").size() == 3);
+          REQUIRE(
+              w.getCategory("Websites").getItem("Facebook").getEntry("url") ==
+              "https://www.facebook.com/");
+          REQUIRE(w.getCategory("Websites")
+                      .getItem("Facebook")
+                      .getEntry("username") == "example@gmail.com");
+          REQUIRE(w.getCategory("Websites")
+                      .getItem("Facebook")
+                      .getEntry("password") == "pass1234fb");
+
+          REQUIRE_NOTHROW(w.getCategory("Websites").getItem("Twitter"));
+          REQUIRE(w.getCategory("Websites").getItem("Twitter").size() == 3);
+          REQUIRE(
+              w.getCategory("Websites").getItem("Twitter").getEntry("url") ==
+              "https://www.twitter.com/");
+          REQUIRE(w.getCategory("Websites")
+                      .getItem("Twitter")
+                      .getEntry("username") == "example@gmail.com");
+          REQUIRE(w.getCategory("Websites")
+                      .getItem("Twitter")
+                      .getEntry("password") == "r43rfsffdsfdsf");
+
+          REQUIRE_NOTHROW(w.getCategory("Bank Accounts"));
+          REQUIRE(w.getCategory("Bank Accounts").size() == 1);
+          REQUIRE_NOTHROW(w.getCategory("Bank Accounts").getItem("Starling"));
+          REQUIRE(w.getCategory("Bank Accounts").getItem("Starling").size() ==
+                  3);
+          REQUIRE(w.getCategory("Bank Accounts")
+                      .getItem("Starling")
+                      .getEntry("Name") == "Mr John Doe");
+          REQUIRE(w.getCategory("Bank Accounts")
+                      .getItem("Starling")
+                      .getEntry("Account Number") == "12345678");
+          REQUIRE(w.getCategory("Bank Accounts")
+                      .getItem("Starling")
+                      .getEntry("Sort Code") == "12-34-56");
+
+        } // THEN
+
+      } // AND_WHEN
 
     } // WHEN
-
-    AND_GIVEN("another empty Item object with the same identifier '" + ident1 +
-              "'") {
-
-      Item iObj2{ident1};
-
-      REQUIRE(iObj2.empty());
-
-      WHEN("compared against each other") {
-
-        THEN("the result will be true") {
-
-          REQUIRE(iObj1 == iObj2);
-
-        } // THEN
-
-      } // WHEN
-
-      WHEN("an entry is added to one of the Item objects") {
-
-        REQUIRE(iObj1.addEntry(key1, value1) == true);
-
-        AND_WHEN("compared against each other") {
-
-          THEN("the result will be false") {
-
-            REQUIRE_FALSE(iObj1 == iObj2);
-
-          } // THEN
-
-        } // AND_WHEN
-
-        AND_WHEN("the same entry is added to the other Item object") {
-
-          REQUIRE(iObj2.addEntry(key1, value1) == true);
-
-          AND_WHEN("compared against each other") {
-
-            THEN("the result will be true") {
-
-              REQUIRE(iObj1 == iObj2);
-
-            } // THEN
-
-          } // AND_WHEN
-
-        } // AND_WHEN
-
-        AND_WHEN("a different entry is added to the other Item object") {
-
-          REQUIRE(iObj2.addEntry(key2, value2) == true);
-
-          AND_WHEN("compared against each other") {
-
-            THEN("the result will be false") {
-
-              REQUIRE_FALSE(iObj1 == iObj2);
-
-            } // THEN
-
-          } // AND_WHEN
-
-        } // AND_WHEN
-
-      } // WHEN
-
-    } // AND_GIVEN
-
-    AND_GIVEN("another empty Item object with identifier '" + ident2 + "'") {
-
-      Item iObj2{ident2};
-
-      REQUIRE(iObj2.empty());
-
-      WHEN("compared against each other") {
-
-        THEN("the result will be false") {
-
-          REQUIRE_FALSE(iObj1 == iObj2);
-
-        } // THEN
-
-        AND_WHEN("an entry is added to one of the Item objects") {
-
-          iObj1.addEntry(key1, value1);
-
-          AND_WHEN("compared against each other") {
-
-            THEN("the result will be false") {
-
-              REQUIRE_FALSE(iObj1 == iObj2);
-
-            } // THEN
-
-          } // AND_WHEN
-
-          AND_WHEN("the same entry is added to the other Item object") {
-
-            iObj2.addEntry(key1, value1);
-
-            AND_WHEN("compared against each other") {
-
-              THEN("the result will be false") {
-
-                REQUIRE_FALSE(iObj1 == iObj2);
-
-              } // THEN
-
-            } // AND_WHEN
-
-          } // AND_WHEN
-
-        } // AND_WHEN
-
-      } // WHEN
-
-    } // AND_GIVEN
-
-  } // GIVEN
-
-} // SCENARIO
-
-SCENARIO("The == operator on Category evaluates its contents correctly",
-         "[category]") {
-
-  const std::string ident1 = "ident1";
-  const std::string ident2 = "ident2";
-
-  GIVEN("an empty Category object with the identifier '" + ident1 + "'") {
-
-    Category cObj1{ident1};
-
-    REQUIRE(cObj1.empty());
-
-    WHEN("compared against itself") {
-
-      THEN("the result will be true") {
-
-        REQUIRE(cObj1 == cObj1);
-
-      } // THEN
-
-    } // WHEN
-
-    AND_GIVEN("another empty Category object with the same identifier '" +
-              ident1 + "'") {
-
-      Category cObj2{ident1};
-
-      REQUIRE(cObj2.empty());
-
-      WHEN("compared against each other") {
-
-        THEN("the result will be true") {
-
-          REQUIRE(cObj1 == cObj2);
-
-        } // THEN
-
-      } // WHEN
-
-      WHEN("an Item is added to one of the Category objects") {
-
-        Item iObj1{ident1};
-
-        REQUIRE(cObj1.addItem(iObj1) == true);
-
-        AND_WHEN("compared against each other") {
-
-          THEN("the result will be false") {
-
-            REQUIRE_FALSE(cObj1 == cObj2);
-
-          } // THEN
-
-        } // AND_WHEN
-
-        AND_WHEN("the same Item is added to the other Category object") {
-
-          REQUIRE(cObj2.addItem(iObj1) == true);
-
-          AND_WHEN("compared against each other") {
-
-            THEN("the result will be true") {
-
-              REQUIRE(cObj1 == cObj2);
-
-            } // THEN
-
-          } // AND_WHEN
-
-        } // AND_WHEN
-
-        AND_WHEN("a different Item is added to the other Category object") {
-
-          Item iObj2{ident2};
-
-          REQUIRE(cObj2.addItem(iObj2) == true);
-
-          AND_WHEN("compared against each other") {
-
-            THEN("the result will be false") {
-
-              REQUIRE_FALSE(cObj1 == cObj2);
-
-            } // THEN
-
-          } // AND_WHEN
-
-        } // AND_WHEN
-
-      } // WHEN
-
-    } // AND_GIVEN
-
-    AND_GIVEN("another empty Category object with identifier '" + ident2 +
-              "'") {
-
-      Category cObj2{ident2};
-
-      REQUIRE(cObj2.empty());
-
-      WHEN("compared against each other") {
-
-        THEN("the result will be false") {
-
-          REQUIRE_FALSE(cObj1 == cObj2);
-
-        } // THEN
-
-        AND_WHEN("an Item is added to one of the Category objects") {
-
-          Item iObj1{ident1};
-
-          REQUIRE(cObj1.addItem(iObj1) == true);
-
-          AND_WHEN("compared against each other") {
-
-            THEN("the result will be false") {
-
-              REQUIRE_FALSE(cObj1 == cObj2);
-
-            } // THEN
-
-          } // AND_WHEN
-
-          AND_WHEN("the same Item is added to the other Category object") {
-
-            REQUIRE(cObj2.addItem(iObj1) == true);
-
-            AND_WHEN("compared against each other") {
-
-              THEN("the result will be false") {
-
-                REQUIRE_FALSE(cObj1 == cObj2);
-
-              } // THEN
-
-            } // AND_WHEN
-
-          } // AND_WHEN
-
-        } // AND_WHEN
-
-      } // WHEN
-
-    } // AND_GIVEN
-
-  } // GIVEN
-
-} // SCENARIO
-
-SCENARIO("The == operator on Wallet evaluates its contents correctly",
-         "[wallet]") {
-
-  const std::string ident1 = "ident1";
-  const std::string ident2 = "ident2";
-
-  GIVEN("an empty Wallet object") {
-
-    Wallet wObj1{};
-
-    REQUIRE(wObj1.empty());
-
-    WHEN("compared against itself") {
-
-      THEN("the result will be true") {
-
-        REQUIRE(wObj1 == wObj1);
-
-      } // THEN
-
-    } // WHEN
-
-    AND_GIVEN("another empty Wallet object") {
-
-      Wallet wObj2{};
-
-      REQUIRE(wObj2.empty());
-
-      WHEN("compared against each other") {
-
-        THEN("the result will be true") {
-
-          REQUIRE(wObj1 == wObj2);
-
-        } // THEN
-
-      } // WHEN
-
-      WHEN("a Category is added to one of the Wallet objects") {
-
-        Category cObj1{ident1};
-
-        REQUIRE(wObj1.addCategory(cObj1) == true);
-
-        AND_WHEN("compared against each other") {
-
-          THEN("the result will be false") {
-
-            REQUIRE_FALSE(wObj1 == wObj2);
-
-          } // THEN
-
-        } // AND_WHEN
-
-        AND_WHEN("the same Category is added to the other Wallet object") {
-
-          REQUIRE(wObj2.addCategory(cObj1) == true);
-
-          AND_WHEN("compared against each other") {
-
-            THEN("the result will be true") {
-
-              REQUIRE(wObj1 == wObj2);
-
-            } // THEN
-
-          } // AND_WHEN
-
-        } // AND_WHEN
-
-        AND_WHEN("a different Category is added to the other Wallet object") {
-
-          Category cObj2{ident2};
-
-          REQUIRE(wObj2.addCategory(cObj2) == true);
-
-          AND_WHEN("compared against each other") {
-
-            THEN("the result will be false") {
-
-              REQUIRE_FALSE(wObj1 == wObj2);
-
-            } // THEN
-
-          } // AND_WHEN
-
-        } // AND_WHEN
-
-      } // WHEN
-
-    } // AND_GIVEN
 
   } // GIVEN
 

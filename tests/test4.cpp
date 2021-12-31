@@ -11,7 +11,7 @@
 // Catch2 is licensed under the BOOST license
 // -----------------------------------------------------
 // This file contains tests adding, getting and deleting
-// Categorys in the Wallet container.
+// Category objects in the Wallet container.
 // -----------------------------------------------------
 
 #include "../src/lib_catch.hpp"

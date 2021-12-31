@@ -30,12 +30,12 @@ SCENARIO("The action program argument can be parsed correctly", "[args]") {
     WHEN("the value of the action argument is not an expected action "
          "('invalid')") {
 
-      Argv argv({"test", "--action", "invalid"});
-      auto **actual_argv = argv.argv();
-      auto argc = argv.argc();
+      Argv argvObj({"test", "--action", "invalid"});
+      auto **argv = argvObj.argv();
+      auto argc = argvObj.argc();
 
       auto cxxopts = App::cxxoptsSetup();
-      auto args = cxxopts.parse(argc, actual_argv);
+      auto args = cxxopts.parse(argc, argv);
 
       const std::string exceptionMessage = "action";
 
@@ -52,12 +52,12 @@ SCENARIO("The action program argument can be parsed correctly", "[args]") {
 
     WHEN("the value of the program argument is 'create'") {
 
-      Argv argv({"test", "--action", "create"});
-      auto **actual_argv = argv.argv();
-      auto argc = argv.argc();
+      Argv argvObj({"test", "--action", "create"});
+      auto **argv = argvObj.argv();
+      auto argc = argvObj.argc();
 
       auto cxxopts = App::cxxoptsSetup();
-      auto args = cxxopts.parse(argc, actual_argv);
+      auto args = cxxopts.parse(argc, argv);
 
       THEN("the argument value is parsed without exception") {
 
@@ -75,12 +75,12 @@ SCENARIO("The action program argument can be parsed correctly", "[args]") {
 
     WHEN("the value of the program argument is 'read'") {
 
-      Argv argv({"test", "--action", "read"});
-      auto **actual_argv = argv.argv();
-      auto argc = argv.argc();
+      Argv argvObj({"test", "--action", "read"});
+      auto **argv = argvObj.argv();
+      auto argc = argvObj.argc();
 
       auto cxxopts = App::cxxoptsSetup();
-      auto args = cxxopts.parse(argc, actual_argv);
+      auto args = cxxopts.parse(argc, argv);
 
       THEN("the argument value is parsed without exception") {
 
@@ -98,12 +98,12 @@ SCENARIO("The action program argument can be parsed correctly", "[args]") {
 
     WHEN("the value of the program argument is 'update'") {
 
-      Argv argv({"test", "--action", "update"});
-      auto **actual_argv = argv.argv();
-      auto argc = argv.argc();
+      Argv argvObj({"test", "--action", "update"});
+      auto **argv = argvObj.argv();
+      auto argc = argvObj.argc();
 
       auto cxxopts = App::cxxoptsSetup();
-      auto args = cxxopts.parse(argc, actual_argv);
+      auto args = cxxopts.parse(argc, argv);
 
       THEN("the argument value is parsed without exception") {
 
@@ -121,12 +121,12 @@ SCENARIO("The action program argument can be parsed correctly", "[args]") {
 
     WHEN("the value of the program argument is a 'delete'") {
 
-      Argv argv({"test", "--action", "delete"});
-      auto **actual_argv = argv.argv();
-      auto argc = argv.argc();
+      Argv argvObj({"test", "--action", "delete"});
+      auto **argv = argvObj.argv();
+      auto argc = argvObj.argc();
 
       auto cxxopts = App::cxxoptsSetup();
-      auto args = cxxopts.parse(argc, actual_argv);
+      auto args = cxxopts.parse(argc, argv);
 
       THEN("the argument value is parsed without exception") {
 
