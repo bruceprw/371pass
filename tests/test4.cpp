@@ -1,5 +1,5 @@
 // -----------------------------------------------------
-// CScObj371 Advanced Object Oriented Programming (2021/22)
+// CSC371 Advanced Object Oriented Programming (2021/22)
 // Department of Computer Science, Swansea University
 //
 // Author: Martin Porcheron
@@ -47,15 +47,19 @@ SCENARIO("An empty Wallet can be constructed successfully", "[wallet]") {
 SCENARIO("Category objects can be added to and retrieved from a Wallet",
          "[wallet]") {
 
-  GIVEN("a Wallet object") {
+  GIVEN("a empty Wallet object") {
 
     Wallet wObj1{};
 
+            REQUIRE(wObj1.empty());
+
     const std::string ident = "Test";
 
-    AND_GIVEN("a Category with identifier '" + ident + "'") {
+    AND_GIVEN("an empty Category with identifier '" + ident + "'") {
 
       Category cObj1{ident};
+
+            REQUIRE(cObj1.empty());
 
       WHEN("adding the Category") {
 
@@ -82,6 +86,8 @@ SCENARIO("Category objects can be added to and retrieved from a Wallet",
 
             Category cObj2{ident};
 
+            REQUIRE(cObj2.empty());
+
             WHEN("adding the Category") {
 
               THEN("false is returned and the size of the Wallet will not "
@@ -100,7 +106,9 @@ SCENARIO("Category objects can be added to and retrieved from a Wallet",
           const std::string ident3 = "Test2";
           Category cObj3{ident3};
 
-          AND_GIVEN("another Category with a different ident, '" + ident3) {
+          AND_GIVEN("another empty Category with a different ident, '" + ident3) {
+
+            REQUIRE(cObj3.empty());
 
             WHEN("the Category is added") {
 
@@ -136,37 +144,41 @@ SCENARIO("Category objects can be added to and retrieved from a Wallet",
 SCENARIO("Category objects can be added to and deleted from a Wallet",
          "[wallet]") {
 
-  GIVEN("a Wallet object") {
+  GIVEN("an empty Wallet object") {
 
-    Wallet w{};
+    Wallet wObj1{};
+
+            REQUIRE(wObj1.empty());
 
     const std::string ident = "Test";
 
     WHEN("a Category with identifier '" + ident + "' can be added") {
 
-      Category c{ident};
+      Category cObj1{ident};
 
-      REQUIRE(w.addCategory(c) == true);
+      REQUIRE(cObj1.empty());
+
+      REQUIRE(wObj1.addCategory(cObj1) == true);
 
       THEN("the Wallet contains 1 Category") {
 
-        REQUIRE(w.size() == 1);
-        REQUIRE_FALSE(w.empty());
+        REQUIRE(wObj1.size() == 1);
+        REQUIRE_FALSE(wObj1.empty());
 
       } // THEN
 
       THEN("the Category can be retrieved by the ident '" + ident + "'") {
 
-        REQUIRE(w.getCategory(ident) == c);
+        REQUIRE(wObj1.getCategory(ident) == cObj1);
 
       } // THEN
 
       THEN("deleting the existent Category ('" + ident +
            "') will leave the Wallet empty") {
 
-        REQUIRE(w.deleteCategory(ident));
-        REQUIRE_THROWS_AS(w.getCategory(ident), std::out_of_range);
-        REQUIRE(w.size() == 0);
+        REQUIRE(wObj1.deleteCategory(ident));
+        REQUIRE_THROWS_AS(wObj1.getCategory(ident), std::out_of_range);
+        REQUIRE(wObj1.size() == 0);
 
       } // THEN
 

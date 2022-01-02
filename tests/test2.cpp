@@ -50,9 +50,11 @@ SCENARIO("Entries can be added to and retrieved from an Item", "[item]") {
 
   const std::string ident = "Test";
 
-  GIVEN("an Item object with identifier '" + ident + "'") {
+  GIVEN("an empty Item object with identifier '" + ident + "'") {
 
     Item iObj1{ident};
+
+    REQUIRE(iObj1.empty());
 
     std::string key = "url";
     std::string value = "https://www.google.com/";
@@ -137,9 +139,11 @@ SCENARIO("Entries can be added to and deleted from an Item", "[item]") {
 
   const std::string ident = "Test";
 
-  GIVEN("an Item object with identifier '" + ident + "'") {
+  GIVEN("an empty Item object with identifier '" + ident + "'") {
 
     Item iObj1{ident};
+
+    REQUIRE(iObj1.empty());
 
     std::string key = "url";
     std::string value = "https://www.google.com/";

@@ -34,7 +34,7 @@ SCENARIO("The database and action program arguments can be parsed correctly "
          "written to",
          "[args]") {
 
-  const std::string filePath = "./tests/testdatabase.json";
+  const std::string filePath = "./tests/testdatabasealt.json";
 
   auto fileExists = [](const std::string &path) {
     return std::ifstream(path).is_open();

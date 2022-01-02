@@ -21,11 +21,11 @@ elif [ $# -eq 1 ]; then
 
     # Do we need to compile Catch2?
     if [ ! -f ./${BIN_DIR}/catch.o ]; then
-      g++ --std=c++17 -c ./src/lib_catch_main.cpp -o ${MAIN_FILE}
+      g++ --std=c++14 -c ./src/lib_catch_main.cpp -o ${MAIN_FILE}
     fi
   fi
 fi
 
 mkdir -p ${BIN_DIR}
 rm ${EXECUTABLE} 2> /dev/null
-g++ --std=c++17 -pedantic -Wall  ${SOURCE_FILES} ${MAIN_FILE} -o ${EXECUTABLE}
+g++ --std=c++14 -pedantic -Wall  ${SOURCE_FILES} ${MAIN_FILE} -o ${EXECUTABLE}

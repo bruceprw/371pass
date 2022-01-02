@@ -50,13 +50,17 @@ SCENARIO("Items can be added to and retrieved from a Category", "[category]") {
 
   const std::string ident = "Test";
 
-  GIVEN("a Category object with identifier '" + ident + "'") {
+  GIVEN("an empty Category object with identifier '" + ident + "'") {
 
     Category cObj1{ident};
 
-    AND_GIVEN("an Item with identifier '" + ident + "'") {
+    REQUIRE(cObj1.empty());
+
+    AND_GIVEN("an empty Item with identifier '" + ident + "'") {
 
       Item iObj1{ident};
+
+      REQUIRE(iObj1.empty());
 
       WHEN("adding the Item") {
 
@@ -79,9 +83,11 @@ SCENARIO("Items can be added to and retrieved from a Category", "[category]") {
 
           } // AND_THEN
 
-          AND_GIVEN("another Item with the same ident, '" + ident + "'") {
+          AND_GIVEN("another empty Item with the same ident, '" + ident + "'") {
 
             Item iObj2{ident};
+
+            REQUIRE(iObj2.empty());
 
             WHEN("adding the Item") {
 
@@ -100,10 +106,12 @@ SCENARIO("Items can be added to and retrieved from a Category", "[category]") {
 
           const std::string ident3 = "Test2";
 
-          AND_GIVEN("another Item with the a different ident, '" + ident3 +
-                    "'") {
+          AND_GIVEN("another empty Item with the a different ident, '" +
+                    ident3 + "'") {
 
             Item iObj3{ident3};
+
+            REQUIRE(iObj3.empty());
 
             WHEN("adding the Item") {
 
@@ -140,13 +148,17 @@ SCENARIO("Items can be added to and deleted from a Category", "[category]") {
 
   const std::string ident = "Test";
 
-  GIVEN("a Category object with identifier '" + ident + "'") {
+  GIVEN("a empty Category object with identifier '" + ident + "'") {
 
     Category cObj1{ident};
 
-    AND_GIVEN("an Item with identifier '" + ident + "") {
+    REQUIRE(cObj1.empty());
+
+    AND_GIVEN("an empty Item with identifier '" + ident + "") {
 
       Item iObj1{ident};
+
+      REQUIRE(iObj1.empty());
 
       WHEN("the entry is added") {
 

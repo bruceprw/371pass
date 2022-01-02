@@ -17,13 +17,13 @@ IF %testStr%==test (
   SET executable=%bin_dir%\371pass-test.exe
 
   IF NOT EXIST %bin_dir%\catch.o (
-     g++ --std=c++17 -c .\%src_dir%\lib_catch_main.hpp -o %bin_dir%\catch.o
+     g++ --std=c++14 -c .\%src_dir%\lib_catch_main.hpp -o %bin_dir%\catch.o
   )
 )
 
 :compile
 IF NOT EXIST %bin_dir% MKDIR %bin_dir%
 IF EXIST %executable% DEL %executable%
-g++ --std=c++17 -Wall %source_files% %main_file% -o %executable%
+g++ --std=c++14 -pedantic -Wall %source_files% %main_file% -o %executable%
 
 :end

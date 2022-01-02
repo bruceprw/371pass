@@ -34,7 +34,7 @@ SCENARIO(
     "such that a file can be opened, read, parsed, data added, and written to",
     "[args]") {
 
-  const std::string filePath = "./tests/testdatabase.json";
+  const std::string filePath = "./tests/testdatabasealt.json";
 
   auto fileExists = [](const std::string &path) {
     return std::ifstream(path).is_open();
@@ -111,18 +111,18 @@ SCENARIO(
 
                 AND_WHEN("loading the saved file into a new Wallet object") {
 
-                  Wallet wObj1{};
-                  REQUIRE(wObj1.empty());
-                  REQUIRE_NOTHROW(wObj1.load(filePath));
+                  Wallet wObj2{};
+                  REQUIRE(wObj2.empty());
+                  REQUIRE_NOTHROW(wObj2.load(filePath));
 
                   THEN("the new Wallet will contain the Category and Item "
                        "objects") {
 
-                    REQUIRE_NOTHROW(wObj1.getCategory(testCategory));
-                    REQUIRE(wObj1.getCategory(testCategory).size() == 1);
+                    REQUIRE_NOTHROW(wObj2.getCategory(testCategory));
+                    REQUIRE(wObj2.getCategory(testCategory).size() == 1);
                     REQUIRE_NOTHROW(
-                        wObj1.getCategory(testCategory).getItem(testItem));
-                    REQUIRE(wObj1.getCategory(testCategory)
+                        wObj2.getCategory(testCategory).getItem(testItem));
+                    REQUIRE(wObj2.getCategory(testCategory)
                                 .getItem(testItem)
                                 .size() == 0);
 
@@ -154,21 +154,21 @@ SCENARIO(
                       AND_WHEN("loading the saved file into a new Wallet "
                                "object") {
 
-                        Wallet wObj1{};
-                        REQUIRE(wObj1.empty());
-                        REQUIRE_NOTHROW(wObj1.load(filePath));
+                        Wallet wObj3{};
+                        REQUIRE(wObj3.empty());
+                        REQUIRE_NOTHROW(wObj3.load(filePath));
 
                         THEN("the new Wallet will contain the Category and "
                              "Item objects and entry") {
 
-                          REQUIRE_NOTHROW(wObj1.getCategory(testCategory));
-                          REQUIRE(wObj1.getCategory(testCategory).size() == 1);
-                          REQUIRE_NOTHROW(wObj1.getCategory(testCategory)
+                          REQUIRE_NOTHROW(wObj3.getCategory(testCategory));
+                          REQUIRE(wObj3.getCategory(testCategory).size() == 1);
+                          REQUIRE_NOTHROW(wObj3.getCategory(testCategory)
                                               .getItem(testItem));
-                          REQUIRE(wObj1.getCategory(testCategory)
+                          REQUIRE(wObj3.getCategory(testCategory)
                                       .getItem(testItem)
                                       .size() == 1);
-                          REQUIRE(wObj1.getCategory(testCategory)
+                          REQUIRE(wObj3.getCategory(testCategory)
                                       .getItem(testItem)
                                       .getEntry(testEntryKey) ==
                                   testEntryValue);
