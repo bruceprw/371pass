@@ -15,6 +15,27 @@
 // Example:
 //  Item iObj{"identIdent"};
 
+// TODO Write a function, size, that takes no parameters and returns an unsigned
+//  int of the number of entries in the Item contains.
+//
+// Example:
+//  Item iObj{"identIdent"};
+//  auto size = iObj.size();
+
+// TODO Write a function, empty, that takes no parameters and returns true
+//  if the number of entries in the Item is zero, false otherwise.
+//
+// Example:
+//  Item iObj{"identIdent"};
+//  auto empty = iObj.empty();
+
+// TODO Write a function, setIdent, that takes one parameter, a string for a new
+//  Item identifier, and updates the member variable. It returns nothing.
+//
+// Example:
+//  Item iObj{"identIdent"};
+//  iObj.setIdent("identIdent2");
+
 // TODO Write a function, getIdent, that returns the identifier for the Item.
 //
 // Example:

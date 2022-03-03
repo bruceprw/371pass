@@ -16,7 +16,7 @@
 //  Wallet wObj{};
 
 // TODO Write a function, size, that takes no parameters and returns an unsigned
-//  int of the number of categories the Wallet contains.
+//  int of the number of categories in the Wallet contains.
 //
 // Example:
 //  Wallet wObj{};

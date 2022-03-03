@@ -15,6 +15,20 @@
 // Example:
 //  Category c{"categoryIdent"};
 
+// TODO Write a function, size, that takes no parameters and returns an unsigned
+//  int of the number of Items in the Category contains.
+//
+// Example:
+//  Category c{"categoryIdent"};
+//  auto size = c.size();
+
+// TODO Write a function, empty, that takes no parameters and returns true
+//  if the number of Items in the Category is zero, false otherwise.
+//
+// Example:
+//  Category c{"categoryIdent"};
+//  auto empty = c.empty();
+
 // TODO Write a function, getIdent, that returns the identifier for the
 //  Category.
 //
