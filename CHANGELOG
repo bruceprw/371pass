@@ -13,7 +13,7 @@
 
 Releases
 --------
-v1.1.2  Worksheet updated                         6th Mar 2022
+v1.1.2  Worksheet and wallet.cpp updated          6th Mar 2022
 v1.1.1  Missing comments for size() and empty()   3rd Mar 2022
 v1.1    Update test2.cpp                          3rd Mar 2022
 v1.0.1  Minor fixes to framework and worksheet    3rd Mar 2022
@@ -22,6 +22,7 @@ v1.0    Initial coursework release                28th Feb 2022
 v1.1.2 - 6th Mar 2022
 ---------------------
 --database argument should be --db in the worksheet (Thanks Rob Wealthall)
+Wallet::deleteEntry() should be Wallet::deleteCategory() (Thanks Ali Kellaway)
 
 v1.1.1 - 3rd Mar 2022
 ---------------------
