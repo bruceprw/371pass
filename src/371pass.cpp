@@ -129,6 +129,11 @@ cxxopts::Options App::cxxoptsSetup() {
 //  App::Action action = parseActionArgument(args);
 App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
     std::string input = args["action"].as<std::string>();
+
+    // Make input case-insensitive by transforming string to lowercase:
+    std::transform(input.begin(), input.begin(),
+                   input.end(), [](unsigned char c){ return std::tolower(c);});
+
     if (input == "create") {
       return Action::CREATE;
     }
