@@ -70,7 +70,13 @@
 //  iObj.addEntry("key", "value");
 
     bool Item::addEntry(std::string key, std::string value) {
-        entries[key] = value;
+    int originalSize = entries.size();
+    entries[key] = value;
+    if (entries.size() > originalSize) {
+        return true;
+    }
+    else return false;
+
 }
 
 // Write a function, getEntry, that takes one parameter, an entry
@@ -87,7 +93,7 @@
             return entries.at(key);
         }
         else {
-            //TODO throw appropriate exception
+            throw std::out_of_range("Entry does not exist in item");
         }
 }
 
@@ -110,7 +116,7 @@
             return true;
         }
         else {
-            //TODO: return appropriate exception
+            throw std::out_of_range("Entry does not exist in item");
         }
     }
 
