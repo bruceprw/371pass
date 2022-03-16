@@ -16,7 +16,7 @@
 //  Item iObj{"identIdent"};
     Item::Item(std::string ident){
     this->ident = ident;
-    this->entries = std::unordered_map<std::string, std::string>();
+    this->entries = std::map<std::string, std::string>();
 }
 
 // Write a function, size, that takes no parameters and returns an unsigned

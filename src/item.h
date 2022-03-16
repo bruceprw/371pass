@@ -15,7 +15,7 @@
 
 #ifndef ITEM_H
 #define ITEM_H
-#include <unordered_map>
+#include <map>
 #include <string>
 #include <sstream>
 
@@ -34,7 +34,7 @@ public:
     std::string str() const;
 
 private:
-    std::unordered_map<std::string, std::string> entries;
+    std::map<std::string, std::string> entries;
     std::string ident;
     friend bool operator==(const Item& lhs, const Item& rhs);
 
