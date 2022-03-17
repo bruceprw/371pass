@@ -22,6 +22,10 @@
 
 
 class Item {
+private:
+    std::string ident;
+    std::map<std::string, std::string> entries;
+    friend bool operator==(const Item& lhs, const Item& rhs);
 
 public:
 
@@ -35,12 +39,7 @@ public:
     std::string getEntry(std::string key) const;
     bool deleteEntry(std::string key);
     std::string str() const;
-
-private:
-    std::map<std::string, std::string> entries;
-    std::string ident;
-    friend bool operator==(const Item& lhs, const Item& rhs);
-
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Item, ident, entries)
 };
 
 
