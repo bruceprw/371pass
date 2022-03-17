@@ -96,9 +96,9 @@
             throw std::out_of_range("Entry does not exist in item");
         }
 }
-
-
-
+std::map<std::string, std::string> Item::getEntries() {
+    return this->entries;
+}
 
 
 // Write a function, deleteEntry, that takes one parameter, an entry
@@ -160,13 +160,7 @@
 //  std::string s = iObj.str();
 
     std::string Item::str() const {
-        std::stringstream sstr;
-        sstr << "{";
-        for(const auto& elem : entries) {
-            sstr<< elem.first << ":" << elem.second << ",";
-        }
-        sstr.seekp(-1, sstr.cur); // Overwrite trailing comma.
-        sstr << "}";
-        return  sstr.str();
+        nlohmann::json j_entries(this->entries);
+        return j_entries.dump();
     }
 

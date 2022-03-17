@@ -18,6 +18,8 @@
 #include <map>
 #include <string>
 #include <sstream>
+#include "lib_json.hpp"
+
 
 class Item {
 
@@ -29,6 +31,7 @@ public:
     void setIdent(std::string ident);
     std::string getIdent() const;
     bool addEntry(std::string key, std::string value);
+    std::map<std::string, std::string> getEntries();
     std::string getEntry(std::string key) const;
     bool deleteEntry(std::string key);
     std::string str() const;
