@@ -162,6 +162,10 @@ Item& Category::getItem(std::string ident) {
 
 }
 
+std::map<std::string, Item> Category::getItems() const {
+    return this->items;
+}
+
 // TODO Write a function, deleteItem, that takes one parameter, an Item
 //  identifier (a string), deletes it from the container, and returns true if
 //  the Item was deleted. If no Item exists, throw an appropriate exception.
@@ -218,4 +222,12 @@ std::string Category::str() {
     nlohmann::json j_items(this->items);
     return j_items.dump();
 }
+
+void Category::to_json(nlohmann::json &j, const Category &c) {
+    j = nlohmann::json { c.getIdent(), c.getItems()};
+}
+
+
+
+
 
