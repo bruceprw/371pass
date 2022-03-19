@@ -59,41 +59,57 @@ int App::run(int argc, char *argv[]) {
     break;
 
   case Action::READ:
-      if (args.count("category") && !args.count("item")) {
-          auto catName = args["category"].as<std::string>();
-          if (wObj.contains(catName)) {
-              std::cout << wObj.getCategory(catName).str();
-          }
-          else throw std::runtime_error("Category " + catName + " not found in wallet.");
-      }
-      else if(args.count("category") && args.count("item")) {
-          auto catName = args["category"].as<std::string>();
-          auto itemName = args["item"].as<std::string>();
-          if (wObj.contains(catName)) {
-              auto cat = wObj.getCategory(catName);
-              if (cat.contains(itemName) && !args.count("entry"))
-              {
-                  std::cout << wObj.getCategory(catName).getItem(itemName).str();
 
-              }
-              else if (cat.contains(itemName) && args.count("entry")) {
-                  auto entryName = args["entry"].as<std::string>();
+
+      if (!args.count("category")) {
+          std::cout << getJSON(wObj);
+          break;
+      }
+
+      try {
+          if (argc % 2 != 0) {
+              throw std::runtime_error("Invalid arguments");
+          }
+        if (args.count("category") && !args.count("item")) {
+            auto catName = args["category"].as<std::string>();
+            if (wObj.contains(catName)) {
+                std::cout << wObj.getCategory(catName).str();
+                break;
+            }
+            else throw std::runtime_error("Category " + catName + " not found in wallet.");
+        }
+        else if(args.count("category") && args.count("item")) {
+            auto catName = args["category"].as<std::string>();
+            auto itemName = args["item"].as<std::string>();
+            if (wObj.contains(catName)) {
+                auto cat = wObj.getCategory(catName);
+                if (cat.contains(itemName) && !args.count("entry"))
+                {
+                    std::cout << wObj.getCategory(catName).getItem(itemName).str();
+                    break;
+                }
+                else if (cat.contains(itemName) && args.count("entry")) {
+                    auto entryName = args["entry"].as<std::string>();
                     if (wObj.getCategory(catName).getItem(itemName).contains(entryName)) {
                         std::cout << wObj.getCategory(catName).getItem(itemName).getEntry(entryName);
+                        break;
                     }
-                    else throw std::runtime_error("Entry " + entryName + " not found in Item " + itemName + "in Category " + catName);
-              }
-              else throw std::runtime_error("Item" + itemName + "not found in " + catName);
-          }
-          else throw std::runtime_error("Category " + catName + " not found in wallet.");
-      }
-//      std::cout << getJSON(wObj);
+                    else throw std::runtime_error("Entry " + entryName + " not found in Item " + itemName + " in Category " + catName);
+                }
+                else throw std::runtime_error("Item" + itemName + "not found in " + catName);
+            }
+            else throw std::runtime_error("Category " + catName + " not found in wallet.");
+        }
 
-//throw std::runtime_error("read not implemented");
-    break;
+      }
+      catch (const std::runtime_error& runtime_error) {
+          std::cerr << "Error: " << runtime_error.what();
+      }
+
+
 
   case Action::UPDATE:
-    throw std::runtime_error("update not implemented");
+//    throw std::runtime_error("update not implemented");
     break;
 
   case Action::DELETE:
@@ -164,24 +180,29 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
     // Make input case-insensitive by transforming string to lowercase:
     std::transform(input.begin(), input.begin(),
                    input.end(), [](unsigned char c){ return std::tolower(c);});
+    try {
+        if (input == "create") {
+            return Action::CREATE;
+        }
+        else if (input == "read") {
+            return Action::READ;
+        }
 
-    if (input == "create") {
-      return Action::CREATE;
+        else if (input == "update") {
+            return Action::UPDATE;
+        }
+
+        else if (input == "delete") {
+            return Action::DELETE;
+        }
+        else {
+            throw std::invalid_argument("action");
+        }
     }
-    else if (input == "read") {
-        return Action::READ;
+    catch (const std::invalid_argument& invalid_argument) {
+        std::cerr << "Error: " << invalid_argument.what();
     }
 
-    else if (input == "update") {
-        return Action::UPDATE;
-    }
-
-    else if (input == "delete") {
-        return Action::DELETE;
-    }
-    else {
-        throw std::invalid_argument("action");
-    }
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the

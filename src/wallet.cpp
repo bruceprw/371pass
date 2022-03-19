@@ -40,8 +40,6 @@ bool Wallet::empty() const {
     return this->categories.empty();
 }
 
-
-
 // TODO Write a function, newCategory, that takes one parameter, a category
 //  identifier, and returns the Category object as a reference. If an object
 //  with the same identifier already exists, then the existing object should be
