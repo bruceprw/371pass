@@ -2,7 +2,7 @@
 // CSC371 Advanced Object Oriented Programming (2021/22)
 // Department of Computer Science, Swansea University
 //
-// Author: <STUDENT NUMBER>
+// Author: 972648
 //
 // Canvas: https://canvas.swansea.ac.uk/courses/24793
 // -----------------------------------------------------
@@ -49,16 +49,47 @@ int App::run(int argc, char *argv[]) {
   const std::string db = args["db"].as<std::string>();
   Wallet wObj{};
   // Only uncomment this once you have implemented the load function!
-  // wObj.load(db);
+   wObj.load(db);
 
   const Action a = parseActionArgument(args);
   switch (a) {
   case Action::CREATE:
     throw std::runtime_error("create not implemented");
+
     break;
 
   case Action::READ:
-    throw std::runtime_error("read not implemented");
+      if (args.count("category") && !args.count("item")) {
+          auto catName = args["category"].as<std::string>();
+          if (wObj.contains(catName)) {
+              std::cout << wObj.getCategory(catName).str();
+          }
+          else throw std::runtime_error("Category " + catName + " not found in wallet.");
+      }
+      else if(args.count("category") && args.count("item")) {
+          auto catName = args["category"].as<std::string>();
+          auto itemName = args["item"].as<std::string>();
+          if (wObj.contains(catName)) {
+              auto cat = wObj.getCategory(catName);
+              if (cat.contains(itemName) && !args.count("entry"))
+              {
+                  std::cout << wObj.getCategory(catName).getItem(itemName).str();
+
+              }
+              else if (cat.contains(itemName) && args.count("entry")) {
+                  auto entryName = args["entry"].as<std::string>();
+                    if (wObj.getCategory(catName).getItem(itemName).contains(entryName)) {
+                        std::cout << wObj.getCategory(catName).getItem(itemName).getEntry(entryName);
+                    }
+                    else throw std::runtime_error("Entry " + entryName + " not found in Item " + itemName + "in Category " + catName);
+              }
+              else throw std::runtime_error("Item" + itemName + "not found in " + catName);
+          }
+          else throw std::runtime_error("Category " + catName + " not found in wallet.");
+      }
+//      std::cout << getJSON(wObj);
+
+//throw std::runtime_error("read not implemented");
     break;
 
   case Action::UPDATE:
@@ -165,9 +196,8 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
 //  Wallet wObj{};
 //  std::cout << getJSON(wObj);
 std::string App::getJSON(Wallet &wObj) { 
-  return "{}";
   // Only uncomment this once you have implemented the functions used!
-  // return wObj.str();
+   return wObj.str();
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
@@ -183,10 +213,10 @@ std::string App::getJSON(Wallet &wObj) {
 //  std::string c = "category argument value";
 //  std::cout << getJSON(wObj, c);
 std::string App::getJSON(Wallet &wObj, const std::string &c) {
-  return "{}";
+//  return "{}";
   // Only uncomment this once you have implemented the functions used!
-  // auto cObj = wObj.getCategory(c);
-  // return cObj.str();
+   auto cObj = wObj.getCategory(c);
+   return cObj.str();
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
@@ -204,11 +234,11 @@ std::string App::getJSON(Wallet &wObj, const std::string &c) {
 //  std::cout << getJSON(wObj, c, i);
 std::string App::getJSON(Wallet &wObj, const std::string &c,
                          const std::string &i) {
-  return "{}";
+//  return "{}";
   // Only uncomment this once you have implemented the functions used!
-  // auto cObj = wObj.getCategory(c);
-  // const auto iObj = cObj.getItem(i);
-  // return iObj.str();
+   auto cObj = wObj.getCategory(c);
+   const auto iObj = cObj.getItem(i);
+   return iObj.str();
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
@@ -227,9 +257,9 @@ std::string App::getJSON(Wallet &wObj, const std::string &c,
 //  std::cout << getJSON(wObj, c, i, e);
 std::string App::getJSON(Wallet &wObj, const std::string &c,
                          const std::string &i, const std::string &e) {
-  return "{}";
+//  return "{}";
   // Only uncomment this once you have implemented the functions used!
-  // auto cObj = wObj.getCategory(c);
-  // auto iObj = cObj.getItem(i);
-  // return iObj.getEntry(e);
+   auto cObj = wObj.getCategory(c);
+   auto iObj = cObj.getItem(i);
+   return iObj.getEntry(e);
 }

@@ -96,7 +96,10 @@
             throw std::out_of_range("Entry does not exist in item");
         }
 }
-std::map<std::string, std::string> Item::getEntries() {
+std::map<std::string, std::string> Item::getEntries(){
+    return this->entries;
+}
+std::map<std::string, std::string> Item::getEntries() const {
     return this->entries;
 }
 
@@ -164,4 +167,14 @@ std::map<std::string, std::string> Item::getEntries() {
         return j_entries.dump();
     }
 
+bool Item::contains(const std::string &ident) const {
+    if (this->entries.count(ident)) {
+        return true;
+    }
+    else return false;
+}
+
+//void Item::to_json(nlohmann::json &j, const Item &i) {
+//    j = nlohmann::json { i.getIdent(), i.getEntries()};
+//}
 

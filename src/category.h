@@ -35,13 +35,15 @@ public:
     void setIdent(std::string ident);
     const Item& newItem(std::string ident);
     bool addItem(Item item);
+    bool contains(const std::string& ident) const;
+
     bool mergeItems(Item& newItem, Item& originalItem);
     Item& getItem(std::string ident);
     std::map<std::string, Item> getItems() const;
     bool deleteItem(std::string ident);
-    std::string str();
-    void to_json(nlohmann::json& j, const Category& c);
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Category, ident, items);
+    std::string str() const;
+//    void to_json(nlohmann::json& j, const Category& c);
+//    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Category, ident, items);
 };
 
 

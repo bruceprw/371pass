@@ -17,7 +17,6 @@
 #define ITEM_H
 #include <map>
 #include <string>
-#include <sstream>
 #include "lib_json.hpp"
 
 
@@ -34,12 +33,15 @@ public:
     bool empty() const;
     void setIdent(std::string ident);
     std::string getIdent() const;
+    bool contains(const std::string& ident) const;
     bool addEntry(std::string key, std::string value);
     std::map<std::string, std::string> getEntries();
     std::string getEntry(std::string key) const;
     bool deleteEntry(std::string key);
     std::string str() const;
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Item, ident, entries)
+//    void to_json(nlohmann::json &j, const Item &i);
+
+    std::map<std::string, std::string> getEntries() const;
 };
 
 

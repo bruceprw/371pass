@@ -7,6 +7,7 @@
 // Canvas: https://canvas.swansea.ac.uk/courses/24793
 // -----------------------------------------------------
 
+#include <sstream>
 #include "category.h"
 
 // TODO Write a constructor that takes one parameter, a string identifier
@@ -92,7 +93,7 @@ const Item &Category::newItem(std::string ident) {
             const Item& myRef = (Item&) this->items.find(ident)->second;
             return myRef;
         }
-        else throw std::runtime_error("Cannot insert newItem");
+        else throw std::runtime_error("Cannot insert new item " + ident);
     }
 }
 
@@ -134,10 +135,6 @@ bool Category::mergeItems(Item& newItem, Item& originalItem) {
     return true;
 }
 
-
-
-
-
 // TODO Write a function, getItem, that takes one parameter, an Item
 //  identifier (a string) and returns the Item as a reference. If no Item
 //  exists, throw an appropriate exception.
@@ -157,7 +154,7 @@ Item& Category::getItem(std::string ident) {
 
     }
     else {
-        throw std::out_of_range("No item with given ident found!");
+        throw std::out_of_range("No item with ident " + ident + " found!");
     }
 
 }
@@ -208,8 +205,6 @@ bool operator==(const Category &lhs, const Category &rhs) {
     else return false;
 }
 
-
-
 // TODO Write a function, str, that takes no parameters and returns a
 //  std::string of the JSON representation of the data in the Category.
 //
@@ -218,14 +213,29 @@ bool operator==(const Category &lhs, const Category &rhs) {
 // Example:
 //  Category cObj{"categoryIdent"};
 //  std::string s = cObj.str();
-std::string Category::str() {
-    nlohmann::json j_items(this->items);
-    return j_items.dump();
+std::string Category::str() const {
+
+    std::stringstream sstr;
+    sstr << "{";
+    for (auto const x: this->items) {
+        sstr << "\"" << x.first << "\"";
+        sstr << ":";
+        sstr << x.second.str();
+        sstr << ",";
+    }
+    sstr.seekp(-1,sstr.cur);
+    sstr << "}";
+
+    return sstr.str();
 }
 
-void Category::to_json(nlohmann::json &j, const Category &c) {
-    j = nlohmann::json { c.getIdent(), c.getItems()};
+bool Category::contains(const std::string &ident) const {
+    if (this->items.count(ident)) {
+        return true;
+    }
+    else return false;
 }
+
 
 
 
