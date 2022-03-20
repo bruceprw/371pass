@@ -68,7 +68,7 @@ int App::run(int argc, char *argv[]) {
   case Action::CREATE:
       try {
           if (!args.count("category") && !args.count("item") && !args.count("entry")) {
-              throw std::invalid_argument("missing category, item, or entry argument(s).");
+              throw std::invalid_argument("missing category, item or entry argument(s).");
           }
       }
       catch (const std::invalid_argument& invalid_argument) {
@@ -132,25 +132,10 @@ int App::run(int argc, char *argv[]) {
     throw std::runtime_error("delete not implemented");
     break;
 
-
-//  case Action::OTHER:
-//
-//      try {
-//          throw std::invalid_argument("Unknown action not implemented");
-//      }
-//      catch (const std::invalid_argument& e) {
-//          std::cerr << "Error: invalid action argument(s).";
-//      }
-
   default:
-      try {
-          throw std::invalid_argument("Unknown action not implemented");
-      }
-      catch (const std::invalid_argument& e) {
-          std::cerr << "Error: invalid action argument(s).";
-      }
+      return 1;
   }
-  return 0;
+    return 0;
 }
 
 // Create a cxxopts instance. You do not need to modify this function.
@@ -221,28 +206,24 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
             throw std::invalid_argument("missing item argument(s).");
         }
     }
-        catch (const std::invalid_argument& invalid_argument) {
+        catch (const std::invalid_argument &invalid_argument) {
             std::cerr << "Error: " << invalid_argument.what();
-            exit(1);
         }
 
         if (input == "create") {
             return Action::CREATE;
-        }
-        else if (input == "read") {
+        } else if (input == "read") {
             return Action::READ;
-        }
-
-        else if (input == "update") {
+        } else if (input == "update") {
             return Action::UPDATE;
-        }
-
-        else if (input == "delete") {
+        } else if (input == "delete") {
             return Action::DELETE;
         }
         else {
-            return Action::OTHER;
+            throw std::invalid_argument("action");
         }
+
+    return Action::OTHER;
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
