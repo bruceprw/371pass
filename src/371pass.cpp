@@ -45,45 +45,60 @@ int App::run(int argc, char *argv[]) {
     return 0;
   }
 
+
   // Open the database and construct the Wallet
   const std::string db = args["db"].as<std::string>();
   Wallet wObj{};
   // Only uncomment this once you have implemented the load function!
    wObj.load(db);
 
+   try{
+       if (argc == 1) {
+           throw std::invalid_argument("missing action argument(s)");
+       }
+
+   }
+   catch (const std::invalid_argument& invalid_argument) {
+       std::cerr << "Error: " << invalid_argument.what();
+   }
+
   const Action a = parseActionArgument(args);
+
   switch (a) {
   case Action::CREATE:
-    throw std::runtime_error("create not implemented");
-
+      try {
+          if (!args.count("category") && !args.count("item") && !args.count("entry")) {
+              throw std::invalid_argument("missing category, item, or entry argument(s).");
+          }
+      }
+      catch (const std::invalid_argument& invalid_argument) {
+          std::cerr << "Error: " << invalid_argument.what();
+          return 1;
+      }
     break;
 
   case Action::READ:
+      try {
 
-
-      if (!args.count("category")) {
+      if (!args.count("category") && !args.count("item") && !args.count("entry") && (argc == 3 || argc == 5)) {
           std::cout << getJSON(wObj);
           break;
       }
 
-      try {
-          if (argc % 2 != 0) {
-              throw std::runtime_error("Invalid arguments");
-          }
         if (args.count("category") && !args.count("item")) {
             auto catName = args["category"].as<std::string>();
             if (wObj.contains(catName)) {
                 std::cout << wObj.getCategory(catName).str();
                 break;
             }
-            else throw std::runtime_error("Category " + catName + " not found in wallet.");
+            else throw std::runtime_error("invalid category argument(s).");
         }
         else if(args.count("category") && args.count("item")) {
             auto catName = args["category"].as<std::string>();
             auto itemName = args["item"].as<std::string>();
             if (wObj.contains(catName)) {
                 auto cat = wObj.getCategory(catName);
-                if (cat.contains(itemName) && !args.count("entry"))
+                if (cat.contains(itemName) && !args.count("entry") && args.count("item"))
                 {
                     std::cout << wObj.getCategory(catName).getItem(itemName).str();
                     break;
@@ -94,18 +109,19 @@ int App::run(int argc, char *argv[]) {
                         std::cout << wObj.getCategory(catName).getItem(itemName).getEntry(entryName);
                         break;
                     }
-                    else throw std::runtime_error("Entry " + entryName + " not found in Item " + itemName + " in Category " + catName);
+                    else throw std::runtime_error("invalid entry argument(s).");
                 }
-                else throw std::runtime_error("Item" + itemName + "not found in " + catName);
+                else throw std::runtime_error("invalid item argument(s).");
             }
-            else throw std::runtime_error("Category " + catName + " not found in wallet.");
+            else throw std::runtime_error("invalid category argument(s).");
         }
 
       }
       catch (const std::runtime_error& runtime_error) {
           std::cerr << "Error: " << runtime_error.what();
+          return 1;
       }
-
+    break;
 
 
   case Action::UPDATE:
@@ -116,10 +132,24 @@ int App::run(int argc, char *argv[]) {
     throw std::runtime_error("delete not implemented");
     break;
 
-  default:
-    throw std::runtime_error("Unknown action not implemented");
-  }
 
+//  case Action::OTHER:
+//
+//      try {
+//          throw std::invalid_argument("Unknown action not implemented");
+//      }
+//      catch (const std::invalid_argument& e) {
+//          std::cerr << "Error: invalid action argument(s).";
+//      }
+
+  default:
+      try {
+          throw std::invalid_argument("Unknown action not implemented");
+      }
+      catch (const std::invalid_argument& e) {
+          std::cerr << "Error: invalid action argument(s).";
+      }
+  }
   return 0;
 }
 
@@ -180,7 +210,22 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
     // Make input case-insensitive by transforming string to lowercase:
     std::transform(input.begin(), input.begin(),
                    input.end(), [](unsigned char c){ return std::tolower(c);});
+
     try {
+        //Check for arg completeness
+        if (!args.count("category") && args.count("item")) {
+            throw std::invalid_argument("missing category argument(s).");
+        } else if (!args.count("category") && args.count("entry")) {
+            throw std::invalid_argument("missing category argument(s).");
+        } else if (!args.count("item") && (args.count("category") && args.count("entry"))) {
+            throw std::invalid_argument("missing item argument(s).");
+        }
+    }
+        catch (const std::invalid_argument& invalid_argument) {
+            std::cerr << "Error: " << invalid_argument.what();
+            exit(1);
+        }
+
         if (input == "create") {
             return Action::CREATE;
         }
@@ -196,13 +241,8 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
             return Action::DELETE;
         }
         else {
-            throw std::invalid_argument("action");
+            return Action::OTHER;
         }
-    }
-    catch (const std::invalid_argument& invalid_argument) {
-        std::cerr << "Error: " << invalid_argument.what();
-    }
-
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the
