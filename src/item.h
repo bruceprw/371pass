@@ -36,8 +36,8 @@ public:
     bool contains(const std::string& ident) const;
     bool addEntry(std::string key, std::string value);
     std::map<std::string, std::string> getEntries();
-    std::string getEntry(std::string key) const;
-    bool deleteEntry(std::string key);
+    std::string getEntry(const std::string& key) const;
+    bool deleteEntry(const std::string& key);
     std::string str() const;
 //    void to_json(nlohmann::json &j, const Item &i);
 

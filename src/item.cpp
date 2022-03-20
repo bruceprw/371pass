@@ -47,8 +47,8 @@
 //  Item iObj{"identIdent"};
 //  iObj.setIdent("identIdent2");
 
-    void Item::setIdent(std::string ident) {
-        this->ident = ident;
+    void Item::setIdent(std::string id) {
+        this->ident = id;
 }
 
 // Write a function, getIdent, that returns the identifier for the Item.
@@ -71,7 +71,7 @@
 
     bool Item::addEntry(std::string key, std::string value) {
     int originalSize = entries.size();
-    entries[key] = value;
+    entries.emplace(key, value);
     if (entries.size() > originalSize) {
         return true;
     }
@@ -88,7 +88,7 @@
 //  iObj.addEntry("key", "value");
 //  auto value = iObj.getEntry("key");
 
-    std::string Item::getEntry(std::string key) const {
+    std::string Item::getEntry(const std::string& key) const {
         if (entries.find(key) != entries.end()) {
             return entries.at(key);
         }
@@ -113,7 +113,7 @@ std::map<std::string, std::string> Item::getEntries() const {
 //  iObj.addEntry("key", "value");
 //  iObj.deleteEntry("key");
 
-    bool Item::deleteEntry(std::string key) {
+    bool Item::deleteEntry(const std::string& key) {
         if (entries.find(key) != entries.end()) {
             entries.erase(key);
             return true;
@@ -167,14 +167,11 @@ std::map<std::string, std::string> Item::getEntries() const {
         return j_entries.dump();
     }
 
-bool Item::contains(const std::string &ident) const {
-    if (this->entries.count(ident)) {
+bool Item::contains(const std::string &entryID) const {
+    if (this->entries.count(entryID)) {
         return true;
     }
     else return false;
 }
 
-//void Item::to_json(nlohmann::json &j, const Item &i) {
-//    j = nlohmann::json { i.getIdent(), i.getEntries()};
-//}
 

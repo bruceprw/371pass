@@ -9,6 +9,7 @@
 
 #include <sstream>
 #include "category.h"
+#include <iostream>
 
 // TODO Write a constructor that takes one parameter, a string identifier
 //  and initialises the object and member data.
@@ -66,8 +67,8 @@ std::string Category::getIdent() const {
 //  Category cObj{"categoryIdent"};
 //  cObj.setIdent("categoryIdent2");
 
-void Category::setIdent(std::string ident) {
-    this->ident = ident;
+void Category::setIdent(std::string id) {
+    this->ident = id;
 }
 
 
@@ -82,18 +83,16 @@ void Category::setIdent(std::string ident) {
 //  Category cObj{"categoryIdent"};
 //  cObj.newItem("itemIdent");
 
-const Item &Category::newItem(std::string ident) {
-    auto foundItem = this->items.find(ident);
-    if (foundItem != this->items.end()) {
-        return (Item&) *foundItem;
+const Item &Category::newItem(std::string id) {
+    if (contains(id)) {
+        return getItem(id);
     }
     else {
-        auto item = Item(ident);
+        Item item = Item(id);
         if (addItem(item)) {
-            const Item& myRef = (Item&) this->items.find(ident)->second;
-            return myRef;
+            return getItem(id);
         }
-        else throw std::runtime_error("Cannot insert new item " + ident);
+        else throw std::runtime_error("Cannot insert new item " + id);
     }
 }
 
@@ -108,31 +107,34 @@ const Item &Category::newItem(std::string ident) {
 //  cObj.addItem(iObj);
 
 bool Category::addItem(Item item) {
-    auto foundItem = this->items.find(item.getIdent());
-    if(foundItem != this->items.end()) {
-        mergeItems(const_cast<Item &>(item), (Item &) *foundItem);
+    if(contains(item.getIdent())) {
+        mergeItems((Item&) item, getItem(item.getIdent()));
         return false;
     }
 
     else {
-        this->items.insert(std::pair<std::string, Item>(item.getIdent(), item));
+        this->items.emplace(item.getIdent(), item);
+        std::cout << "inserted" << std::endl;
+
         return true;
     }
-
-
 }
 
 // In the case that we are trying to add an item with an ident that is already in our map of items,
 // merge the contents of the new item with those of the original item.
 bool Category::mergeItems(Item& newItem, Item& originalItem) {
 
-    auto newEntries = newItem.getEntries();
-    for (auto const& it : newEntries){
-        if (!originalItem.addEntry(it.first, it.second)){
-            return false;
+    if (!newItem.empty()) {
+        auto newEntries = newItem.getEntries();
+        for (auto const& it : newEntries){
+            if (!originalItem.addEntry(it.first, it.second)){
+                return false;
+            }
         }
+        return true;
     }
-    return true;
+    else return false;
+
 }
 
 // TODO Write a function, getItem, that takes one parameter, an Item
@@ -217,13 +219,17 @@ std::string Category::str() const {
 
     std::stringstream sstr;
     sstr << "{";
-    for (auto const x: this->items) {
-        sstr << "\"" << x.first << "\"";
-        sstr << ":";
-        sstr << x.second.str();
-        sstr << ",";
+
+    if (!this->items.empty()) {
+        for (auto const x: this->items) {
+            sstr << "\"" << x.first << "\"";
+            sstr << ":";
+            sstr << x.second.str();
+            sstr << ",";
+        }
+        sstr.seekp(-1,sstr.cur);
     }
-    sstr.seekp(-1,sstr.cur);
+
     sstr << "}";
 
     return sstr.str();

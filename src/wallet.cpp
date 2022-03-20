@@ -9,6 +9,7 @@
 
 #include <fstream>
 #include <sstream>
+
 #include "wallet.h"
 #include "lib_json.hpp"
 
@@ -49,16 +50,14 @@ bool Wallet::empty() const {
 // Example:
 //  Wallet wObj{};
 //  wObj.newCategory("categoryIdent");
-Category &Wallet::newCategory(std::string categoryID) {
-    auto foundCategory = this->categories.find(categoryID);
-    if (foundCategory != this->categories.end()) {
-        return (Category&) *foundCategory;
+Category& Wallet::newCategory(std::string categoryID) {
+    if (contains(categoryID)) {
+        return getCategoryRef(categoryID);
     }
     else {
         auto category = Category(categoryID);
         if (addCategory(category)) {
-            const Category& myRef = this->categories.find(categoryID)->second;
-            return const_cast<Category &>(myRef);
+            return getCategoryRef(categoryID);
         }
         else throw std::runtime_error("Cannot insert new category");
     }
@@ -76,15 +75,17 @@ Category &Wallet::newCategory(std::string categoryID) {
 //  Category cObj{"categoryIdent"};
 //  wObj.addCategory(cObj);
 bool Wallet::addCategory(Category category) {
-    auto foundCategory = this->categories.find(category.getIdent());
-    if(foundCategory != this->categories.end()) {
-        mergeCategories(const_cast<Category &>(category), (Category &) *foundCategory);
+    if(contains(category.getIdent())) {
+        mergeCategories(const_cast<Category &>(category), getCategoryRef(category.getIdent()));
         return false;
     }
 
     else {
-        this->categories.insert(std::pair<std::string, Category>(category.getIdent(), category));
-        return true;
+        this->categories.emplace(category.getIdent(), category);
+        if (contains(category.getIdent())) {
+            return true;
+        }
+        else throw std::runtime_error("Could not insert category into container");
     }
 }
 
@@ -110,14 +111,26 @@ bool Wallet::mergeCategories(Category &newCategory, Category &originalCategory) 
 //  auto cObj = wObj.getCategory("categoryIdent");
 
 Category Wallet::getCategory(std::string categoryID) {
-    auto foundCategory = this->categories.find(categoryID);
-    if (foundCategory != this->categories.end()) {
-        return foundCategory->second;
+
+    if (contains(categoryID)){
+        return this->categories.at(categoryID);
     }
     else {
         throw std::out_of_range("Category not found");
     }
 }
+
+Category& Wallet::getCategoryRef(std::string categoryID) {
+
+    if (contains(categoryID)){
+        return this->categories.at(categoryID);
+    }
+    else {
+        throw std::out_of_range("Category not found");
+    }
+}
+
+
 
 
 
@@ -282,13 +295,16 @@ bool operator==(const Wallet &lhs, const Wallet &rhs) {
 std::string Wallet::str() {
 std::stringstream sstr;
     sstr << "{";
-    for (auto const x: this->categories) {
-        sstr << "\"" << x.first << "\"";
-        sstr << ":";
-        sstr << x.second.str();
-        sstr << ",";
+    if (!this->categories.empty()) {
+        for (auto const x: this->categories) {
+            sstr << "\"" << x.first << "\"";
+            sstr << ":";
+            sstr << x.second.str();
+            sstr << ",";
+        }
+        sstr.seekp(-1,sstr.cur);
     }
-    sstr.seekp(-1,sstr.cur);
+
     sstr << "}";
 
     return sstr.str();

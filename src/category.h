@@ -32,8 +32,8 @@ public:
     unsigned int size() const;
     bool empty() const;
     std::string getIdent() const;
-    void setIdent(std::string ident);
-    const Item& newItem(std::string ident);
+    void setIdent(std::string id);
+    const Item& newItem(std::string id);
     bool addItem(Item item);
     bool contains(const std::string& ident) const;
 
@@ -42,8 +42,6 @@ public:
     std::map<std::string, Item> getItems() const;
     bool deleteItem(std::string ident);
     std::string str() const;
-//    void to_json(nlohmann::json& j, const Category& c);
-//    NLOHMANN_DEFINE_TYPE_INTRUSIVE(Category, ident, items);
 };
 
 

@@ -49,7 +49,6 @@ int App::run(int argc, char *argv[]) {
   // Open the database and construct the Wallet
   const std::string db = args["db"].as<std::string>();
   Wallet wObj{};
-  // Only uncomment this once you have implemented the load function!
    wObj.load(db);
 
    try{
@@ -62,19 +61,80 @@ int App::run(int argc, char *argv[]) {
        std::cerr << "Error: " << invalid_argument.what();
    }
 
-  const Action a = parseActionArgument(args);
+    const Action a = parseActionArgument(args);
 
-  switch (a) {
+
+    switch (a) {
   case Action::CREATE:
       try {
           if (!args.count("category") && !args.count("item") && !args.count("entry")) {
               throw std::invalid_argument("missing category, item or entry argument(s).");
+          }
+          else if (!args.count("category") && (args.count("item") || args.count("entry"))) {
+              throw std::invalid_argument("missing category argument(s).");
+          }
+          else if (!args.count("item") && args.count("entry")) {
+              throw std::invalid_argument("missing item argument(s).");
           }
       }
       catch (const std::invalid_argument& invalid_argument) {
           std::cerr << "Error: " << invalid_argument.what();
           return 1;
       }
+
+            try {
+          if (args.count("category") && !args.count("item")) {
+              auto catName = args["category"].as<std::string>();
+              wObj.newCategory(catName);
+          }
+          else if (args.count("category") && args.count("item") && !args.count("entry")) {
+
+              auto catName = args["category"].as<std::string>();
+              auto itemName = args["item"].as<std::string>();
+              auto thisCat = wObj.newCategory(catName);
+
+              thisCat.newItem(itemName);
+          }
+          else if (args.count("category") && args.count("item") && args.count("entry")){
+              auto catName = args["category"].as<std::string>();
+              auto itemName = args["item"].as<std::string>();
+              auto entry = args["item"].as<std::string>();
+              auto entryDelimiterPos = entry.find(',');
+
+//              if (entryDelimiterPos == std::string::npos) {
+//                  throw std::runtime_error("Entry ident/value not comma delimited.");
+//              }
+
+              auto entryName = entry.substr(0, entryDelimiterPos);
+              auto entryValue = entry.substr(entryDelimiterPos);
+              wObj.newCategory(catName);
+              wObj.getCategory(catName).newItem(itemName);
+              wObj.getCategory(catName).getItem(itemName).addEntry(entryName, entryValue);
+
+
+
+              //Ensure that entry name/value is correctly delimited.
+//              if (entryDelimiterPos != 0 || entryDelimiterPos != entry.length()-1){
+//                  auto entryName = entry.substr(0, entryDelimiterPos);
+//                  auto entryValue = entry.substr(entryDelimiterPos);
+//                  wObj.newCategory(catName);
+//                  wObj.getCategory(catName).newItem(itemName);
+//                  wObj.getCategory(catName).getItem(itemName).addEntry(entryName, entryValue);
+//              }
+//              else throw std::runtime_error("Entry only contains one of ident/value");
+          }
+      }
+
+      catch (const std::runtime_error& runtime_error) {
+          std::cerr << "Error: " << runtime_error.what();
+          return 1;
+      }
+
+      catch (const std::out_of_range& out_of_range) {
+          std::cerr << "Error: " << out_of_range.what();
+      }
+
+    wObj.save(db);
     break;
 
   case Action::READ:
@@ -88,7 +148,7 @@ int App::run(int argc, char *argv[]) {
         if (args.count("category") && !args.count("item")) {
             auto catName = args["category"].as<std::string>();
             if (wObj.contains(catName)) {
-                std::cout << wObj.getCategory(catName).str();
+                std::cout << getJSON(wObj, catName);
                 break;
             }
             else throw std::runtime_error("invalid category argument(s).");
@@ -100,13 +160,13 @@ int App::run(int argc, char *argv[]) {
                 auto cat = wObj.getCategory(catName);
                 if (cat.contains(itemName) && !args.count("entry") && args.count("item"))
                 {
-                    std::cout << wObj.getCategory(catName).getItem(itemName).str();
+                    std::cout << getJSON(wObj, catName, itemName);
                     break;
                 }
                 else if (cat.contains(itemName) && args.count("entry")) {
                     auto entryName = args["entry"].as<std::string>();
                     if (wObj.getCategory(catName).getItem(itemName).contains(entryName)) {
-                        std::cout << wObj.getCategory(catName).getItem(itemName).getEntry(entryName);
+                        std::cout << getJSON(wObj, catName, itemName, entryName);
                         break;
                     }
                     else throw std::runtime_error("invalid entry argument(s).");
@@ -195,7 +255,6 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
     // Make input case-insensitive by transforming string to lowercase:
     std::transform(input.begin(), input.begin(),
                    input.end(), [](unsigned char c){ return std::tolower(c);});
-
     try {
         //Check for arg completeness
         if (!args.count("category") && args.count("item")) {
@@ -208,6 +267,7 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
     }
         catch (const std::invalid_argument &invalid_argument) {
             std::cerr << "Error: " << invalid_argument.what();
+            exit(1);
         }
 
         if (input == "create") {
@@ -222,8 +282,6 @@ App::Action App::parseActionArgument(cxxopts::ParseResult &args) {
         else {
             throw std::invalid_argument("action");
         }
-
-    return Action::OTHER;
 }
 
 // TODO Write a function, getJSON, that returns a std::string containing the

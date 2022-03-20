@@ -29,6 +29,8 @@ public:
     bool addCategory(Category category);
     bool mergeCategories(Category& newCategory, Category& originalCategory);
     Category getCategory(std::string categoryID);
+    Category& getCategoryRef(std::string categoryID);
+
     bool deleteCategory(std::string categoryID);
     void load(std::string filename);
     void save(std::string filename);
