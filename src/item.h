@@ -7,7 +7,7 @@
 // Canvas: https://canvas.swansea.ac.uk/courses/24793
 // -----------------------------------------------------
 // An Item class contains multiple 'entries' as
-// key/value pairs (e.g., a key might be 'username'
+// key/value pairs (e.g., a key might be 'username')
 // and a value would be the username, another might be
 // 'url' and the value is the website address the
 // username is for.
@@ -39,8 +39,6 @@ public:
     std::string getEntry(const std::string& key) const;
     bool deleteEntry(const std::string& key);
     std::string str() const;
-//    void to_json(nlohmann::json &j, const Item &i);
-
     std::map<std::string, std::string> getEntries() const;
 };
 

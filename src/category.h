@@ -35,7 +35,7 @@ public:
     void setIdent(std::string id);
     const Item& newItem(std::string id);
     bool addItem(Item item);
-    bool contains(const std::string& ident) const;
+    bool contains(const std::string& categoryID) const;
 
     bool mergeItems(Item& newItem, Item& originalItem);
     Item& getItem(std::string ident);

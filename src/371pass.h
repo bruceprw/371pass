@@ -20,7 +20,6 @@
 
 namespace App {
 
-// TODO: Enter your student number here!
 const std::string STUDENT_NUMBER = "972648";
 
 // Enums (short for enumerations) are similar to their Java implementation.
@@ -40,14 +39,13 @@ const std::string STUDENT_NUMBER = "972648";
 //
 // This enum specifies the four different values we support in the action
 // program argument.
-enum Action { CREATE, READ, UPDATE, DELETE, OTHER};
+enum Action { CREATE, READ, UPDATE, DELETE};
 
 int run(int argc, char *argv[]);
 
 cxxopts::Options cxxoptsSetup();
 
 App::Action parseActionArgument(cxxopts::ParseResult &args);
-void validateArgs(cxxopts::ParseResult &args, int argc);
 
 std::string getJSON(Wallet &w);
 std::string getJSON(Wallet &w, const std::string &c);

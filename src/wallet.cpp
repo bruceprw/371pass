@@ -13,15 +13,14 @@
 #include "wallet.h"
 #include "lib_json.hpp"
 
-// TODO Write a Wallet constructor that takes no parameters and constructs an
+//  Write a Wallet constructor that takes no parameters and constructs an
 //  empty wallet.
 //
 
 Wallet::Wallet() {
-    this->categories = std::map<std::string, Category>();
 }
 
-// TODO Write a function, size, that takes no parameters and returns an unsigned
+//  Write a function, size, that takes no parameters and returns an unsigned
 //  int of the number of categories in the Wallet contains.
 //
 // Example:
@@ -31,7 +30,7 @@ unsigned int Wallet::size() const {
     return this->categories.size();
 }
 
-// TODO Write a function, empty, that takes no parameters and returns true
+//  Write a function, empty, that takes no parameters and returns true
 //  if the number of categories in the Wallet is zero, false otherwise.
 //
 // Example:
@@ -41,7 +40,7 @@ bool Wallet::empty() const {
     return this->categories.empty();
 }
 
-// TODO Write a function, newCategory, that takes one parameter, a category
+//  Write a function, newCategory, that takes one parameter, a category
 //  identifier, and returns the Category object as a reference. If an object
 //  with the same identifier already exists, then the existing object should be
 //  returned. Throw a std::runtime_error if the Category object cannot be
@@ -64,7 +63,7 @@ Category& Wallet::newCategory(std::string categoryID) {
 }
 
 
-// TODO Write a function, addCategory, that takes one parameter, a Category
+//  Write a function, addCategory, that takes one parameter, a Category
 //  object, and returns true if the object was successfully inserted. If an
 //  object with the same identifier already exists, then the contents should be
 //  merged and then return false. Throw a std::runtime_error if the Category
@@ -101,7 +100,7 @@ bool Wallet::mergeCategories(Category &newCategory, Category &originalCategory) 
 
 
 
-// TODO Write a function, getCategory, that takes one parameter, a Category
+//  Write a function, getCategory, that takes one parameter, a Category
 //  identifier and returns the Category. If no Category exists, throw an
 //  appropriate exception.
 //
@@ -134,7 +133,7 @@ Category& Wallet::getCategoryRef(std::string categoryID) {
 
 
 
-// TODO Write a function, deleteCategory, that takes one parameter, a Category
+//  Write a function, deleteCategory, that takes one parameter, a Category
 //  identifier, and deletes it from the container, and returns true if the
 //  Category was deleted. If no Category exists, throw an appropriate exception.
 //
@@ -155,7 +154,7 @@ bool Wallet::deleteCategory(std::string categoryID) {
 
 }
 
-// TODO Write a function, load, that takes one parameter, a std::string,
+//  Write a function, load, that takes one parameter, a std::string,
 //  containing the filename for the database. Open the file, read the contents,
 //  and populates the container for this Wallet. If the file does open throw an
 //  appropriate exception (either std::runtime_error or a derived class).
@@ -245,7 +244,7 @@ void Wallet::load(std::string filename) {
 
 
 
-// TODO Write a function ,save, that takes one parameter, the path of the file
+//  Write a function ,save, that takes one parameter, the path of the file
 //  to write the database to. The function should serialise the Wallet object
 //  as JSON.
 //
@@ -265,7 +264,7 @@ void Wallet::save(std::string filename) {
 
 
 
-// TODO Write an == operator overload for the Wallet class, such that two
+//  Write an == operator overload for the Wallet class, such that two
 //  Wallet objects are equal only if they have the exact same data.
 //
 // Example:
@@ -282,7 +281,7 @@ bool operator==(const Wallet &lhs, const Wallet &rhs) {
 }
 
 
-// TODO Write a function, str, that takes no parameters and returns a
+//  Write a function, str, that takes no parameters and returns a
 //  std::string of the JSON representation of the data in the Wallet.
 //
 // Hint:

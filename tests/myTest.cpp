@@ -13,19 +13,10 @@
 
 int main() {
 
-    Item iObj1{"Starling"};
-    std::string key = "Account Number";
-    std::string value = "12345678";
-    iObj1.addEntry(key, value);
-    key = "Name";
-    value = "Mr John Doe";
-    iObj1.addEntry(key, value);
-    key = "Sort Code";
-    value = "12-34-56";
-    iObj1.addEntry(key, value);
+    const std::string testCategory = "TestCategory";
+    const std::string testItem = "TestItem";
+    const std::string testEntryKey = "TestEntryKey";
+    const std::string testEntryValue = "TestEntryValue";
+    const std::string testEntry = testEntryKey + "," + testEntryValue;
 
-    Category cObj1{"Bank Accounts"};
-    cObj1.addItem(iObj1);
-    std::cout << cObj1.str();
-//    std::cout << iObj1.str();
 }
